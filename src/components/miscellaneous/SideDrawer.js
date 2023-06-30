@@ -16,6 +16,7 @@ export default function SideDrawer() {
   const {isOpen,onOpen,onClose}=useDisclosure()
   const [noData,setNoData]=useState(false)
 
+  const [userChat,setUserChat]=useState(false)
   const handleSearch=async(e)=>{
     e.preventDefault()
     if(!search){
@@ -41,6 +42,10 @@ export default function SideDrawer() {
     
   }
 
+  const accessChat=async(id)=>{
+
+  }
+
   function toggle(){
     setSearchResult([])
     setNoData(false)
@@ -55,7 +60,7 @@ export default function SideDrawer() {
         <i className="nc-icon nc-zoom-split"></i>{' '}
         {/* <span>Search User</span> */}
         </Button>
-        <h5 style={{margin:"0px", color:"#fff"}}>Ezhuth Chat</h5>
+        <h5 style={{margin:"0px", color:"#fff"}}>Chat App</h5>
     <div>
       <Menu>
         <MenuButton p={1} bg={"#4ec94e"} border={"none"}>

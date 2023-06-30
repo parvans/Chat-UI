@@ -95,5 +95,24 @@ export const getUsers = async (keword) => {
     return { data: data, ok: true }
 }
 
+export const accessChat = async (userId) => {
+    const requestOptions = {
+        method: "POST",
+        mode: "cors",
+        headers: { 
+            "Content-Type": "application/json", 
+            "auth-token": token 
+        },
+        body: JSON.stringify({userId})
+    }
+    const response = await fetch(baseUrl + "chat/accesschat", requestOptions)
+    if (!response.ok) {
+        let data = await response.json();
+        return { data: data, ok: false }
+    }
+    let data = await response?.json();
+    return { data: data, ok: true }
+}
+
 
 
