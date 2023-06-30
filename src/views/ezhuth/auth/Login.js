@@ -52,7 +52,7 @@ export default function Login() {
                 if(!loading){
                     toast.success('Login Success')
                     localStorage.setItem('ezuth-token', response.data.token)
-                    navigation.push('/ezhuth/chat')
+                    navigation.push('/chatbot/chat')
                     window.location.reload()
                 }
                 

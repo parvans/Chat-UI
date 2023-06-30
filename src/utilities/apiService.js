@@ -80,8 +80,20 @@ export const userResetPassword = async (body) => {
     return { data: data, ok: true }
 }
 
-//  ******************** Blog API ***********************
-
+export const getUsers = async (keword) => {
+    const requestOptions = {
+        method: "GET",
+        mode: "cors",
+        headers: { "Content-Type": "application/json", "auth-token": token },
+    }
+    const response = await fetch(baseUrl + `user/users?search=${keword}`, requestOptions)
+    if (!response.ok) {
+        let data = await response.json();
+        return { data: data, ok: false }
+    }
+    let data = await response?.json();
+    return { data: data, ok: true }
+}
 
 
 

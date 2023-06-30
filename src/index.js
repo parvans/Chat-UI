@@ -40,8 +40,8 @@ root.render(
   <>
     <Switch>
       {/* <Route path="/chatbot" render={(props) => <AdminLayout {...props} />} /> */}
-      <Route path="/ezhuth/chat" render={(props) => <ChatArea/>} />
-      <Route path="/ezhuth" component={<NotFound/>} />
+      <Route path="/chatbot/chat" render={(props) => <ChatArea/>} />
+      <Route path="/chatbot" component={<NotFound/>} />
       {!token&&<Route path="/auth/login" render={(props) => <Login {...props} />} />}
       {!token ? <Redirect from={`/`} to="/auth/login" /> : <Redirect from={`/`} to="/ezhuth/home" />}
     </Switch>
