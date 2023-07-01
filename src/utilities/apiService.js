@@ -1,7 +1,7 @@
 //  ******************** Base URL ***********************
 let baseUrl = "http://localhost:6060/api/";
 //  ******************** Token ***********************
-var token = localStorage.getItem('ezuth-token')
+var token = localStorage.getItem('auth-token')
 //  ******************** User API ***********************
 export const userLogin = async (email, password) => {
     const requestOptions = {
@@ -106,6 +106,24 @@ export const accessChat = async (userId) => {
         body: JSON.stringify({userId})
     }
     const response = await fetch(baseUrl + "chat/accesschat", requestOptions)
+    if (!response.ok) {
+        let data = await response.json();
+        return { data: data, ok: false }
+    }
+    let data = await response?.json();
+    return { data: data, ok: true }
+}
+
+export const getChats = async () => {
+    const requestOptions = {
+        method: "GET",
+        mode: "cors",
+        headers: { 
+            "Content-Type": "application/json", 
+            "auth-token": token 
+        },
+    }
+    const response = await fetch(baseUrl + "chat/fetchchat", requestOptions)
     if (!response.ok) {
         let data = await response.json();
         return { data: data, ok: false }

@@ -43,7 +43,7 @@ root.render(
       <Route path="/chatbot/chat" render={(props) => <ChatArea/>} />
       <Route path="/chatbot" component={<NotFound/>} />
       {!token&&<Route path="/auth/login" render={(props) => <Login {...props} />} />}
-      {!token ? <Redirect from={`/`} to="/auth/login" /> : <Redirect from={`/`} to="/ezhuth/home" />}
+      {!token ? <Redirect from={`/`} to="/auth/login" /> : <Redirect from={`/`} to="/chatbot/chat" />}
     </Switch>
   </>
   </BrowserRouter>

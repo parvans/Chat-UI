@@ -51,7 +51,7 @@ export default function Login() {
                 }, 1000);
                 if(!loading){
                     toast.success('Login Success')
-                    localStorage.setItem('ezuth-token', response.data.token)
+                    localStorage.setItem('auth-token', response.data.token)
                     navigation.push('/chatbot/chat')
                     window.location.reload()
                 }
