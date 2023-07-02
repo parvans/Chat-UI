@@ -119,7 +119,7 @@ function Header(props) {
               <span className="navbar-toggler-bar bar3" />
             </button>
           </div> */}
-          <NavbarBrand href="/">
+          <NavbarBrand href="/chatbot/chat">
             Chatbot <Badge color="success">Beta</Badge>
             </NavbarBrand>
         </div>
