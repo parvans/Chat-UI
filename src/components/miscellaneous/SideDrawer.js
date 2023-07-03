@@ -86,7 +86,7 @@ export default function SideDrawer() {
         </MenuButton >
 
         </Menu>
-        <ProfileModal/>
+        {/* <ProfileModal/> */}
     </div>
     </div>
     <Modal isOpen={isOpen} toggle={onClose} className="modal-dialog-centered" scrollable={true}>
