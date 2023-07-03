@@ -11,18 +11,17 @@ import { dashboardEmailStatisticsChart } from 'variables/charts'
 import { dashboardNASDAQChart } from 'variables/charts'
 export default function ChatArea() {
     const {user}=ChatState()
+    const [fetchAgain,setFetchAgain]=React.useState(false)
   return (
     <>
     <DemoNavbar/>
     <div className="content" style={{marginTop:"70px"}}>
         <div style={{width:"100%"}}>
             {user&& <SideDrawer/>}
-            {/* <div style={{display:"flex",justifyContent:"space-between",width:"100%",height:"91.5vh",padding:"10px"}}> */}
-              <Row style={{display:"flex",justifyContent:"center",width:"100%",height:"91.5vh",padding:"10px"}}>
-                {user&& <MyChats/>}
-                {user&& <ChatBox/>}
+              <Row style={{display:"flex",justifyContent:"center",width:"100%",height:"91.5vh",padding:"10px",marginLeft:"0px"}}>
+                {user&& <MyChats fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />}
+                {user&& <ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />}
               </Row>
-            {/* </div> */}
            
         </div>
     </div>
