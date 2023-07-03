@@ -20,6 +20,16 @@ Licensed under the MIT license - http://opensource.org/licenses/MIT
 
 Copyright (c) 2015 Daniel Eden
 */
+
+::-webkit-scrollbar {
+width: 0px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(136, 136, 136,0.281);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
 .animated {
   -webkit-animation-duration: 1s;
   animation-duration: 1s;
@@ -43,6 +53,7 @@ Copyright (c) 2015 Daniel Eden
 .animated.flipOutY {
   -webkit-animation-duration: .75s;
   animation-duration: .75s; }
+
 
 @-webkit-keyframes shake {
   from, to {

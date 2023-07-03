@@ -11,8 +11,8 @@ export default function ProfileModal({user,children}) {
         children?(
             <span onClick={onOpen}>{children}</span>
         ):(
-            <Button onClick={onOpen} className="btn-round" color="secondary">
-                <ViewIcon w={17} h={20} />
+            <Button onClick={onOpen} className="btn-icon btn-round" color="dark" outline>
+                <ViewIcon w={17} h={20} mb={1} />
             </Button>
         )}
 

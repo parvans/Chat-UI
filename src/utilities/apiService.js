@@ -132,5 +132,23 @@ export const getChats = async () => {
     return { data: data, ok: true }
 }
 
+export const createGroup = async (body) => {
+    const requestOptions = {
+        method: "POST",
+        mode: "cors",
+        headers: { 
+            "Content-Type": "application/json", 
+            "auth-token": token 
+        },
+        body: JSON.stringify(body)
+    }
+    const response = await fetch(baseUrl + "chat/creategroupchat", requestOptions)
+    if (!response.ok) {
+        let data = await response.json();
+        return { data: data, ok: false }
+    }
+    return { data: null, ok: true }
+}
+
 
 
