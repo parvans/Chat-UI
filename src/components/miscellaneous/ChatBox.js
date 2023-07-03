@@ -9,9 +9,9 @@ export default function ChatBox({fetchAgain,setFetchAgain}) {
   return (
       <Col md="8">
         <Card style={{backgroundColor:"#dee0df",height:"100%"}}>
-          <CardHeader style={{backgroundColor:"#6bd098"}}>
+          {/* <CardHeader style={{backgroundColor:"#6bd098"}}>
             <CardTitle tag="h4"style={{color:'white'}}>Chat Box</CardTitle>
-          </CardHeader>
+          </CardHeader> */}
           <CardBody>
             <SingleChat fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
           </CardBody>

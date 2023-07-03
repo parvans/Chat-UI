@@ -11,7 +11,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
       {selectedChat ? (
         <>
             <Text
-            fontSize={{ base: "28px", md: "30px"}}
+            fontSize={28}
             pb={3}
             px={2}
             w={"100%"}
@@ -19,20 +19,25 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
             d="flex"
             justifyContent="space-between"
             alignItems={"center"}>
-                {/* <IconButton 
-                d={{ base: "flex", md: "none" }}
-                icon={<i className="fas fa-arrow-left"></i>}
-                onClick={() => setSelectedChat("")}
-                /> */}
-                <Button className="btn btn-success btn-md  mt-1 ml-4" onClick={() => setSelectedChat("")}>
-                <i className="fas fa-arrow-left mr-2"/> 
-                Back
+                <Button className="btn btn-success btn-round  mt-1 ml-4" outline onClick={() => setSelectedChat("")}>
+                <i className="fas fa-arrow-left"/> 
                 </Button>
+                {
+                    !selectedChat?.isGroupChat ? (
+                        <>
+                        {selectedChat?.users[1]?.name.toUpperCase()}
 
+                        </>
+                    ):(
+                        <>
+                        {selectedChat?.chatName.toUpperCase()}
+                        </>
+                    )
+                }
             </Text>
         </>
       ) : (
-        <div className="text-center">
+        <div className="text-center mt-5">
             <img src={selcetchat} alt="chat"/>
           <h3 style={{ color: "grey", marginTop: "5%" }}>
             Select a chat to start messaging
