@@ -11,6 +11,7 @@
     "bootstrap": "4.6.0",
     "chart.js": "3.2.1",
     "cloudinary-react": "^1.8.1",
+    "emoji-picker-react": "^4.4.9",
     "firebase": "^9.22.0",
     "framer-motion": "^10.12.17",
     "jodit-pro-react": "^1.3.32",
@@ -25,6 +26,7 @@
     "react-dom": ">=16.8.0",
     "react-google-button": "^0.7.2",
     "react-hot-toast": "^2.4.0",
+    "react-lottie": "^1.2.3",
     "react-notification-alert": "0.0.13",
     "react-router-dom": "5.2.0",
     "react-scripts": "5.0.1",
@@ -32,6 +34,7 @@
     "react-table": "^7.8.0",
     "reactstrap": "8.7.1",
     "sass": "1.53.0",
+    "socket.io-client": "^4.7.1",
     "thousands-counter": "^2.1.1"
   },
   "scripts": {
