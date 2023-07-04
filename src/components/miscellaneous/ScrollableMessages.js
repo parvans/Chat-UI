@@ -19,6 +19,7 @@ export default function ScrollableMessages({messages}) {
                                 <p>{message.content}</p>
                             </div>
                         )
+
                     }
                 </div>
             ))
