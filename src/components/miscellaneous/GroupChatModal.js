@@ -27,8 +27,8 @@ export default function GroupChatModal({children}) {
             const res=await getUsers(value)
             if(res?.ok){
                 // console.log(res?.data?.data);
-                setSearchResult(res?.data?.data)
                 setLoading(false)
+                setSearchResult(res?.data?.data)
             }
             // console.log(res?.data?.data);
          } catch (error) {
@@ -49,7 +49,7 @@ export default function GroupChatModal({children}) {
                 setChats([res?.data?.data,...chats])
                 onClose()
                 toast.success("New Group Created Successfully")
-                window.location.reload()
+                // window.location.reload()
             }else{
                 toast.error(res?.data?.message)
             }

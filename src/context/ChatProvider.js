@@ -11,7 +11,7 @@ const ChatProvider = ({ children }) => {
   useEffect(()=>{
     const userInfo=localStorage.getItem('auth-token')
     setUser(userInfo)
-    console.log(userInfo);
+    // console.log(userInfo);
     if(!userInfo){
         history?.push('/')
     }

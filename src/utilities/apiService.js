@@ -161,7 +161,27 @@ export const renameGroup = async (body) => {
         },
         body: JSON.stringify(body)
     }
-    const response = await fetch(baseUrl + "chat/renameGroup", requestOptions)
+    const response = await fetch(baseUrl + "chat/renamegroup", requestOptions)
+    if (!response.ok) {
+        let data = await response.json();
+        return { data: data, ok: false }
+    }
+    let data = await response?.json();
+    return { data: data, ok: true }
+}
+
+
+export const groupAddMember = async (body) => {
+    const requestOptions = {
+        method: "PUT",
+        mode: "cors",
+        headers: { 
+            "Content-Type": "application/json", 
+            "auth-token": token 
+        },
+        body: JSON.stringify(body)
+    }
+    const response = await fetch(baseUrl + "chat/groupadd", requestOptions)
     if (!response.ok) {
         let data = await response.json();
         return { data: data, ok: false }
@@ -188,6 +208,46 @@ export const groupRemoveMember = async (body) => {
     let data = await response?.json();
     return { data: data, ok: true }
 }
+
+export const sendUserMessage = async (body) => {
+    const requestOptions = {
+        method: "POST",
+        mode: "cors",
+        headers: { 
+            "Content-Type": "application/json", 
+            "auth-token": token 
+        },
+        body: JSON.stringify(body)
+    }
+    const response = await fetch(baseUrl + "message/sendmessage", requestOptions)
+    if (!response.ok) {
+        let data = await response.json();
+        return { data: data, ok: false }
+    }
+    let data = await response?.json();
+    return { data: data, ok: true }
+}
+
+export const fetcheMessages = async (chatId) => {
+    const requestOptions = {
+        method: "GET",
+        mode: "cors",
+        headers: { 
+            "Content-Type": "application/json", 
+            "auth-token": token 
+        },
+    }
+    const response = await fetch(baseUrl + `message/${chatId}`, requestOptions)
+    if (!response.ok) {
+        let data = await response.json();
+        return { data: data, ok: false }
+    }
+    // console.log(response)
+    let data = await response?.json();
+    return { data: data, ok: true }
+}
+
+
 
 
 

@@ -5,7 +5,6 @@ import SingleChat from './SingleChat';
 
 export default function ChatBox({fetchAgain,setFetchAgain}) {
   const {selectedChat}=ChatState()
-  console.log(selectedChat);
   return (
       <Col md="8">
         <Card style={{backgroundColor:"#dee0df",height:"100%"}}>
