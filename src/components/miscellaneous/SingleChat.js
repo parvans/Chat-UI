@@ -129,7 +129,10 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
         {
           !selectedChat?.isGroupChat ? (
             <Text fontSize={28} > 
-              {selectedChat?.users[1]?.name.toUpperCase()}
+              {/* {selectedChat?.users[1]?.name.toUpperCase()} */}
+              {
+                selectedChat?.users[0]._id===jwtDecode(localStorage.getItem("auth-token")).id ? selectedChat?.users[1]?.name.toUpperCase():selectedChat?.users[0]?.name.toUpperCase()
+              }
             </Text>
           ) : (
             <Text fontSize={28}>
