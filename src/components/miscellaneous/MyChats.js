@@ -58,7 +58,7 @@ export default function MyChats({fetchAgain,setFetchAgain}) {
                           >
                             <Text fontSize={17} fontWeight="bold" p={6}>
                               {!item?.isGroupChat
-                              ? getSender(loggedUser, item?.users)
+                              ? item?.users[0]._id===jwtDecode(localStorage.getItem("auth-token")).id ? item?.users[1]?.name:item?.users[0]?.name
                               :item.chatName}
                             </Text>
                           </Box>

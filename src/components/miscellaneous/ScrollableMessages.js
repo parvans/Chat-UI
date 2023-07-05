@@ -6,26 +6,24 @@ import { isSameSender } from 'config/ChatLogic';
 import jwtDecode from 'jwt-decode';
 import React from 'react'
 import ScrollableFeed from 'react-scrollable-feed'
-
+import moment from 'moment';
 export default function ScrollableMessages({messages}) {
     const userId=localStorage.getItem('auth-token')
     const uId=jwtDecode(userId)?.id;
   return (
-    <ScrollableFeed>
+     <ScrollableFeed>
+        <>
+        
         {
             messages && messages.map((message,index)=>(
                 <div style={{display:'flex'}} key={message._id}>
                     {/* {
-                        message.sender._id===uId ? (
-                            <div className="message-sender">
-                                <p>{message.content}</p>
-                            </div>
-                        ):(
-                            <div className="message-receiver">
-                                <p>{message.content}</p>
-                            </div>
+                        message.createdAt && (
+                            
+                            <small style={{color:"gray",fontSize:"10px", marginLeft:"5px",marginTop:"10px"}}>
+                                {moment(message.createdAt).fromNow()}
+                            </small>
                         )
-
                     } */}
 
                     {( isSameSender(messages,message,index,uId)|| 
@@ -83,12 +81,15 @@ export default function ScrollableMessages({messages}) {
                 }
                 < br/>
                 <small style={{color:"gray",fontSize:"10px", marginLeft:"5px"}}>
-                    {new Date(message.createdAt).toLocaleTimeString()}
+                    {moment(message.createdAt).format('LT')}
                 </small>
                 </span>
+                
                 </div>
+                
             ))
         }
-    </ScrollableFeed>
+        </>
+     </ScrollableFeed> 
   )
 }

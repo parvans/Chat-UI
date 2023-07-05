@@ -1,5 +1,6 @@
 //  ******************** Base URL ***********************
-let baseUrl = "http://localhost:6060/api/";
+// let baseUrl = "http://localhost:6060/api/";
+let baseUrl = "http://192.168.1.40:6060/api/";
 //  ******************** Token ***********************
 var token = localStorage.getItem('auth-token')
 //  ******************** User API ***********************

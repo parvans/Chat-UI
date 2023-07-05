@@ -1,5 +1,4 @@
-import { ArrowBackIcon } from "@chakra-ui/icons";
-import { Box, FormControl, IconButton, Text, Textarea } from "@chakra-ui/react";
+import { FormControl, Text } from "@chakra-ui/react";
 import { ChatState } from "context/ChatProvider";
 import React, { useEffect, useState } from "react";
 import { Button, Spinner } from "reactstrap";
@@ -16,11 +15,13 @@ import ScrollableMessages from "./ScrollableMessages";
 import { io } from "socket.io-client";
 import EmojiPicker from 'emoji-picker-react';
 import Lottie from 'react-lottie';
-import typing from '../../../src/animations/typing.json'
+import typings from '../../../src/animations/typing.json'
+
+
 const ENDPOINT = "http://localhost:6060";
 var socket,selectedChatCompare;
 export default function SingleChat({ fetchAgain, setFetchAgain }) {
-  const {selectedChat, setSelectedChat } = ChatState();
+  const {selectedChat, setSelectedChat,notifications,setNotifications } = ChatState();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [latestMessage, setLatestMessage] = useState();
@@ -31,7 +32,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   const defaultOptions={
     loop:true,
     autoplay:true,
-    animationData:typing,
+    animationData:typings,
     rendererSettings:{
       preserveAspectRatio:"xMidYMid slice"
     }
@@ -55,7 +56,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
         setLoading(false);
         socket.emit('join room', selectedChat?._id);
       }
-      console.log(messages);
+      // console.log(messages);
     } catch (error) {
       console.log(error);
     }
@@ -64,7 +65,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
     if(event.key === "Enter" && latestMessage){
       socket.emit('stop typing', selectedChat?._id);
       try {
-        console.log(selectedChat);
+        // console.log(selectedChat);
         const res=await sendUserMessage({
           chatId:selectedChat?._id,
           cotent:latestMessage
@@ -101,22 +102,29 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
     }
   };
 
-
+  useEffect(() => {
+    socket.on('message received', (newMessage) => {
+      if(!selectedChatCompare||selectedChatCompare._id!==newMessage.chat._id){
+        //notification
+        if(!notifications.includes(newMessage)){
+          setNotifications([newMessage,...notifications])
+          setFetchAgain(!fetchAgain);
+          
+        }
+      }else{
+        setMessages([...messages,newMessage])
+      }
+    })
+  });
 
   useEffect(() => {
     getMessages();
     selectedChatCompare = selectedChat;
   }, [selectedChat]);
 
-  useEffect(() => {
-    socket.on('message received', (newMessage) => {
-      if(!selectedChatCompare||selectedChatCompare._id!==newMessage.chat._id){
-        //notification
-      }else{
-        setMessages([...messages,newMessage])
-      }
-    })
-  });
+  
+ 
+  console.log(notifications);
 
   return (
     <>
@@ -166,7 +174,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                     {
                       isTyping ? (
                         <div>
-                          {/* <Lottie
+                          <Lottie
                           options={defaultOptions}
                           width={50}
                           height={50}
@@ -174,8 +182,8 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                             marginBottom: 15,
                             marginLeft: 0
                           }}
-                          /> */}
-                          typing ...
+                          />
+                          {/* typing ... */}
                         </div>
                           
                       ) : (
@@ -184,7 +192,6 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                     }
                     <input type="text" className="form-control" placeholder="Type a message" value={latestMessage} onChange={handleTyping} />
                     {/* <EmojiPicker /> */}
-                    {/* <Textarea placeholder="Type a message" value={latestMessage} onChange={handleMessage} /> */}
                  </FormControl>
         </div>
         </>

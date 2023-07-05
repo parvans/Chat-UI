@@ -1,4 +1,4 @@
-import {Menu,MenuButton } from '@chakra-ui/react'
+import {Menu,MenuButton, MenuList } from '@chakra-ui/react'
 import {useDisclosure } from '@chakra-ui/hooks'
 import { BellIcon } from '@chakra-ui/icons'
 import React, { useState } from 'react'
@@ -16,7 +16,7 @@ export default function SideDrawer() {
   const [loading,setLoading]=useState(false)
   const [loadingChat,setLoadingChat]=useState(false)
 
-  const {user,setSelectedChat,chats,setChats}=ChatState()
+  const {user,setSelectedChat,chats,setChats,notifications,setNotifications}=ChatState()
   const {isOpen,onOpen,onClose}=useDisclosure()
   const [noData,setNoData]=useState(false)
 
@@ -80,13 +80,26 @@ export default function SideDrawer() {
         </Button>
         <h5 style={{margin:"0px", color:"#fff"}}>Chatbot</h5>
     <div>
-      <Menu>
+      {/* <Menu>
         <MenuButton p={1} bg={"#4ec94e"} border={"none"}>
           <BellIcon  w={25} h={50} />
         </MenuButton >
+        <MenuList bg={"#4ec94e"} border={"none"} color={"#fff"}>
+             {
+              !notifications?.length && "No Notifications"
+             }
+             {
+              !notifications?.length && "No Notifications"
+             }
+             {
+              !notifications?.length && "No Notifications"
+             }
+             {
+              !notifications?.length && "No Notifications"
+             }
+        </MenuList>
 
-        </Menu>
-        {/* <ProfileModal/> */}
+        </Menu> */}
     </div>
     </div>
     <Modal isOpen={isOpen} toggle={onClose} className="modal-dialog-centered" scrollable={true}>
