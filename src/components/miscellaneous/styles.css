@@ -3,5 +3,6 @@
     flex-direction: column;
     overflow-y: scroll;
     scrollbar-width: none;
+    overflow: hidden;
 
 }

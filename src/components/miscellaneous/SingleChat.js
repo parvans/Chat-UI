@@ -38,14 +38,6 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
     }
   }
 
-  useEffect(() => {
-    socket = io(ENDPOINT);
-    socket.emit('setup', jwtDecode(localStorage.getItem("auth-token")));
-    socket.on('connected',()=>setSocketConnection(true))
-    socket.on('typing', () =>setIsTyping(true));
-    socket.on('stop typing', () =>setIsTyping(false));
-  },[])
-
   const getMessages = async () => {
     if(!selectedChat) return;
     try {
@@ -82,6 +74,37 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
     }
   };
 
+  useEffect(() => {
+    socket = io(ENDPOINT);
+    socket.emit('setup', jwtDecode(localStorage.getItem("auth-token")));
+    socket.on('connected',()=>setSocketConnection(true))
+    socket.on('typing', () =>setIsTyping(true));
+    socket.on('stop typing', () =>setIsTyping(false));
+  },[])
+
+  useEffect(() => {
+    getMessages();
+    selectedChatCompare = selectedChat;
+  }, [selectedChat]);
+
+
+  useEffect(() => {
+    socket.on('message received', (newMessage) => {
+      if(!selectedChatCompare||selectedChatCompare._id!==newMessage.chat._id){
+        //notification
+        if(!notifications.includes(newMessage)){
+          setNotifications([newMessage,...notifications])
+          setFetchAgain(!fetchAgain);
+        }
+      }else{
+        setMessages([...messages,newMessage])
+      }
+    })
+  });
+
+
+
+
   const handleTyping = (e) => {
     setLatestMessage(e.target.value);
 
@@ -89,6 +112,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
     if(!typing){
       setTyping(true);
       socket.emit('typing', selectedChat?._id);
+    }
       let lastTypingTime = new Date().getTime();
       var timerLength = 3000;
       setTimeout(() => {
@@ -99,32 +123,11 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
           setTyping(false);
         }
       }, timerLength);
-    }
   };
 
-  useEffect(() => {
-    socket.on('message received', (newMessage) => {
-      if(!selectedChatCompare||selectedChatCompare._id!==newMessage.chat._id){
-        //notification
-        if(!notifications.includes(newMessage)){
-          setNotifications([newMessage,...notifications])
-          setFetchAgain(!fetchAgain);
-          
-        }
-      }else{
-        setMessages([...messages,newMessage])
-      }
-    })
-  });
 
-  useEffect(() => {
-    getMessages();
-    selectedChatCompare = selectedChat;
-  }, [selectedChat]);
 
-  
- 
-  console.log(notifications);
+  //console.log(notifications);
 
   return (
     <>
@@ -153,7 +156,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
         }
         {
           !selectedChat?.isGroupChat ? (
-            <ProfileModal user={selectedChat?.users[1]}/>
+            <ProfileModal user={selectedChat?.users[0]._id===jwtDecode(localStorage.getItem("auth-token")).id ? selectedChat?.users[1]:selectedChat?.users[0]}/>
           ) : (
             <GroupUpdateModal fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} fetcheMessages={fetcheMessages}/>
           )
