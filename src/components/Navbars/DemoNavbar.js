@@ -230,13 +230,23 @@ function Header(props) {
           </div> */}
           <NavbarBrand href="/chatbot/chat">
             Chatbot <Badge color="dark">Beta</Badge>
+            
             </NavbarBrand>
         </div>
+          {/* <Badge color="danger" pill style={{ position: "absolute", top: "0px", right: "0px" }} >
+                1000
+              </Badge> */}
         <NavbarToggler onClick={toggles}>
+              {
+                notifications?.length > 0 && <Badge color="danger" pill style={{ position: "absolute", top: "2px", right: "7px" }} >
+                      {notifications?.length}
+                    </Badge>
+              }
           <span className="navbar-toggler-bar navbar-kebab" />
           <span className="navbar-toggler-bar navbar-kebab" />
           <span className="navbar-toggler-bar navbar-kebab" />
         </NavbarToggler>
+        
         <Collapse isOpen={isOpens} navbar className="justify-content-end">
 
         <Button className="btn-icon btn-round" color="dark" outline onClick={onOpen}>

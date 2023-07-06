@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast, Toaster } from 'react-hot-toast'
 import { useHistory } from 'react-router-dom'
 import { Button, Card, CardBody, CardGroup, CardSubtitle, CardTitle, Col, Container, FormGroup, Input, Label, Row, Spinner } from 'reactstrap'
@@ -25,7 +25,7 @@ export default function Login() {
     const [isOtp, setIsOtp] = useState(false)
     const [isResetPassword, setIsResetPassword] = useState(false)
     const [loading, setLoading] = useState(false)
-
+    const [error, setError] = useState(false)
     const navigation = useHistory()
 
     const handleLogin = async (e) => {
@@ -69,20 +69,21 @@ export default function Login() {
     }
 
     const handleRegister = async (e) => {
+        setError(true)
         e.preventDefault()
-        if (name === '') {
+        if (!name) {
             setNameError('Name is required')
         } else {
             setNameError('')
         }
-        if (email === '') {
+        if (!email) {
             setEmailError('Email is required')
         } else if (!/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{3}$/.test(email)) {
             setEmailError('Email is invalid')
         } else {
             setEmailError('')
         }
-        if (password === '') {
+        if (!password) {
             setPasswordError('Password is required')
         }else if(password.length < 6){
             setPasswordError('Password must be at least 6 characters')
@@ -99,7 +100,7 @@ export default function Login() {
         }else{
             setPasswordError('')
         }
-        if (confirmPassword === '') {
+        if (!confirmPassword) {
             setConfirmPasswordError('Confirm Password is required')
         }else if(confirmPassword !== password){
             setConfirmPasswordError('Confirm Password must be same as Password')
@@ -107,37 +108,40 @@ export default function Login() {
             setConfirmPasswordError('')
         }
 
-        if(nameError !== '' && emailError !== '' && passwordError !== '' && confirmPasswordError !== ''){
-            console.log('error');
+        if(nameError || emailError || passwordError  || confirmPasswordError){
+            console.log("error"); 
         }else{
-        
-            setLoading(true)
-            const regResponse = await userRegister({
-                name: name,
-                email: email,
-                password: password
-            })
-            if (regResponse.ok) {
-                setTimeout(() => {
-                    setLoading(false)
-                }, 1000);
-                if(!loading){
-                toast.success('Welcome to Ezhuth')
-                setTimeout(() => {
-                    setIsRegister(false)
-                }, 1000);
+            try {
+                setLoading(true)
+                const regResponse = await userRegister({
+                    name: name,
+                    email: email,
+                    password: password
+                })
+                if (regResponse.ok) {
+                    setTimeout(() => {
+                        setLoading(false)
+                    }, 1000);
+                    if(!loading){
+                    toast.success('Welcome to Ezhuth')
+                    setTimeout(() => {
+                        setIsRegister(false)
+                    }, 1000);
+                    }
+                } else {
+                    setTimeout(() => {
+                        setLoading(false)
+                    }, 1000);
+                    if(!loading){
+                    toast.error(regResponse.data.message)
+                    }
                 }
-            } else {
-                setTimeout(() => {
-                    setLoading(false)
-                }, 1000);
-                if(!loading){
-                toast.error(regResponse.data.message)
-                }
+            } catch (error) {
+                console.log(error);
             }
+           
         }
-        
-
+            
     }
 
     const verifyEmail = async (e) => {

@@ -61,8 +61,12 @@ export default function MyChats({fetchAgain,setFetchAgain}) {
                               ? item?.users[0]._id===jwtDecode(localStorage.getItem("auth-token")).id ? item?.users[1]?.name:item?.users[0]?.name
                               :item.chatName}
                             </Text>
+                            
                           </Box>
+                          
                         ))}
+
+                        
                     </Stack>
                   ):(
                     <Spinner color="primary" />

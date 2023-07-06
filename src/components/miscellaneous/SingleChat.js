@@ -13,11 +13,15 @@ import { fetcheMessages } from "utilities/apiService";
 import "./styles.css"
 import ScrollableMessages from "./ScrollableMessages";
 import { io } from "socket.io-client";
-import EmojiPicker from 'emoji-picker-react';
 import Lottie from 'react-lottie';
 import typings from '../../../src/animations/typing.json'
-
-
+import { IconButton, TextField } from "@material-ui/core";
+import Textarea from '@mui/joy/Textarea';
+import { InputAdornment } from "@mui/material";
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
+import SendIcon from '@mui/icons-material/Send';
+import data from '@emoji-mart/data'
+import Picker from '@emoji-mart/react'
 const ENDPOINT = "http://192.168.1.40:9000";
 var socket,selectedChatCompare;
 export default function SingleChat({ fetchAgain, setFetchAgain }) {
@@ -28,7 +32,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   const [socketConnection, setSocketConnection] = useState(false);
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-
+  const [isEmoji, setIsEmoji] = useState(false);
   const defaultOptions={
     loop:true,
     autoplay:true,
@@ -90,6 +94,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
 
   useEffect(() => {
     socket.on('message received', (newMessage) => {
+      // console.log(newMessage );
       if(!selectedChatCompare||selectedChatCompare._id!==newMessage.chat._id){
         //notification
         if(!notifications.includes(newMessage)){
@@ -128,6 +133,20 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
 
 
   //console.log(notifications);
+
+  const onEmojiClick = (e) => {
+    const sym=e.unified.split('_'); 
+    let codesArray = [];
+    sym.forEach(el => codesArray.push('0x' + el));
+    let emoji = String.fromCodePoint(...codesArray);
+    setLatestMessage(latestMessage+emoji);
+    setIsEmoji(false);
+    // if(latestMessage){
+    //   setLatestMessage(latestMessage+emoji);
+    // }else{
+    //   setLatestMessage(emoji);
+    // }
+  }
 
   return (
     <>
@@ -193,8 +212,33 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                         <></>
                       )
                     }
-                    <input type="text" className="form-control" placeholder="Type a message" value={latestMessage} onChange={handleTyping} />
+                    {/* <input type="text" className="form-control" placeholder="Type a message" value={latestMessage} onChange={handleTyping} /> */}
+                    <TextField fullWidth id="outlined-basic" variant="outlined"  placeholder="Type a message..." value={latestMessage} onChange={handleTyping}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton onClick={() => setIsEmoji(!isEmoji)}>
+                            <SentimentSatisfiedAltIcon/>
+                          </IconButton>
+                          <IconButton onClick={() => sendMessage({key:"Enter"})}>
+                            <SendIcon/>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+
+                     />
+                     {
+                        isEmoji &&(
+                          <div style={{position:"absolute",bottom:100,right:10}}>
+                            <Picker 
+                            data={data} 
+                            onEmojiSelect={onEmojiClick} />
+                          </div>
+                        )
+                     }
                     {/* <EmojiPicker /> */}
+                    
                  </FormControl>
         </div>
         </>

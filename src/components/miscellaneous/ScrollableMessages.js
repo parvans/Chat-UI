@@ -61,7 +61,7 @@ export default function ScrollableMessages({messages}) {
                                 justifyContent:"center",
                                 fontWeight:"bold",
                             }}>
-                                {message.sender.name[0]}
+                                {message.sender.name[0]?.toUpperCase()}
                             </div>
                             
                         </Tooltip>
