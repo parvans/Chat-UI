@@ -26,7 +26,7 @@ const ENDPOINT = "http://192.168.1.41:9000";
 var socket,selectedChatCompare;
 
 export default function SingleChat({ fetchAgain, setFetchAgain }) {
-  const {selectedChat, setSelectedChat,notifications,setNotifications,isOnline, set_isOnline } = ChatState();
+  const {selectedChat, setSelectedChat,notifications,setNotifications} = ChatState();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [latestMessage, setLatestMessage] = useState();
@@ -34,7 +34,6 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [isEmoji, setIsEmoji] = useState(false);
-  let interval = null;
 
 
   // var pp=navigator.onLine;
@@ -116,8 +115,6 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   });
 
   console.log(notifications);
-
-
 
 
   const handleTyping = (e) => {
