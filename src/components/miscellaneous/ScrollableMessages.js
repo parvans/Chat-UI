@@ -7,11 +7,13 @@ import jwtDecode from 'jwt-decode';
 import React from 'react'
 import ScrollableFeed from 'react-scrollable-feed'
 import moment from 'moment';
+import "./styles.css"
+
 export default function ScrollableMessages({messages}) {
     const userId=localStorage.getItem('auth-token')
     const uId=jwtDecode(userId)?.id;
   return (
-     <ScrollableFeed>
+     <ScrollableFeed className='scroll-vard'>
         <>
         
         {

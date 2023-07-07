@@ -3,11 +3,9 @@ import { ChatState } from "context/ChatProvider";
 import React, { useEffect, useState } from "react";
 import { Button, Spinner } from "reactstrap";
 import selcetchat from "../../assets/img/selectchat.png";
-import { getSender } from "config/ChatLogic";
 import jwtDecode from "jwt-decode";
 import ProfileModal from "./ProfileModal";
 import GroupUpdateModal from "./GroupUpdateModal";
-import { event } from "jquery";
 import { sendUserMessage } from "utilities/apiService";
 import { fetcheMessages } from "utilities/apiService";
 import "./styles.css"
@@ -16,16 +14,19 @@ import { io } from "socket.io-client";
 import Lottie from 'react-lottie';
 import typings from '../../../src/animations/typing.json'
 import { IconButton, TextField } from "@material-ui/core";
-import Textarea from '@mui/joy/Textarea';
 import { InputAdornment } from "@mui/material";
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import SendIcon from '@mui/icons-material/Send';
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
-const ENDPOINT = "http://192.168.1.40:9000";
+import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
+//==================================================================>>
+
+const ENDPOINT = "http://192.168.1.41:9000";
 var socket,selectedChatCompare;
+
 export default function SingleChat({ fetchAgain, setFetchAgain }) {
-  const {selectedChat, setSelectedChat,notifications,setNotifications } = ChatState();
+  const {selectedChat, setSelectedChat,notifications,setNotifications,isOnline, set_isOnline } = ChatState();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [latestMessage, setLatestMessage] = useState();
@@ -33,6 +34,11 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [isEmoji, setIsEmoji] = useState(false);
+  let interval = null;
+
+
+  // var pp=navigator.onLine;
+  // console.log(pp);
   const defaultOptions={
     loop:true,
     autoplay:true,
@@ -86,6 +92,8 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
     socket.on('stop typing', () =>setIsTyping(false));
   },[])
 
+
+
   useEffect(() => {
     getMessages();
     selectedChatCompare = selectedChat;
@@ -106,6 +114,8 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
       }
     })
   });
+
+  console.log(notifications);
 
 
 
@@ -132,20 +142,17 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
 
 
 
-  //console.log(notifications);
-
+  
   const onEmojiClick = (e) => {
     const sym=e.unified.split('_'); 
     let codesArray = [];
     sym.forEach(el => codesArray.push('0x' + el));
     let emoji = String.fromCodePoint(...codesArray);
-    setLatestMessage(latestMessage+emoji);
-    setIsEmoji(false);
-    // if(latestMessage){
-    //   setLatestMessage(latestMessage+emoji);
-    // }else{
-    //   setLatestMessage(emoji);
-    // }
+    if(latestMessage){
+      setLatestMessage(latestMessage+emoji);
+    }else{
+      setLatestMessage(emoji);
+    }
   }
 
   return (
@@ -158,12 +165,17 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
         </Button>
         {
           !selectedChat?.isGroupChat ? (
+
+            <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
             <Text fontSize={28} > 
               {/* {selectedChat?.users[1]?.name.toUpperCase()} */}
               {
                 selectedChat?.users[0]._id===jwtDecode(localStorage.getItem("auth-token")).id ? selectedChat?.users[1]?.name.toUpperCase():selectedChat?.users[0]?.name.toUpperCase()
               }
             </Text>
+            </div>
+            
+            
           ) : (
             <Text fontSize={28}>
               {selectedChat?.chatName.toUpperCase()}
@@ -182,7 +194,12 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
         }
         </div>
            
-        <div style={{display:"flex",flexDirection:"column",justifyContent:"flex-end",width:"100%",height:"80vh",overflow:"hidden",backgroundColor:"#fff",padding:10,borderRadius:10}}>
+        <div style={{
+          display:"flex",flexDirection:"column",justifyContent:"flex-end",
+          width:"100%",height:"80vh",overflow:"hidden",
+          padding:10,borderRadius:10,backgroundImage:"url('https://w0.peakpx.com/wallpaper/818/148/HD-wallpaper-whatsapp-background-cool-dark-green-new-theme-whatsapp.jpg')",
+          
+        }}>
         {
                 loading ? (
                   <Spinner color="primary"/>
@@ -196,6 +213,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                     {
                       isTyping ? (
                         <div>
+                          
                           <Lottie
                           options={defaultOptions}
                           width={50}
@@ -205,7 +223,6 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                             marginLeft: 0
                           }}
                           />
-                          {/* typing ... */}
                         </div>
                           
                       ) : (
@@ -213,12 +230,23 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                       )
                     }
                     {/* <input type="text" className="form-control" placeholder="Type a message" value={latestMessage} onChange={handleTyping} /> */}
-                    <TextField fullWidth id="outlined-basic" variant="outlined"  placeholder="Type a message..." value={latestMessage} onChange={handleTyping}
+                    <TextField  fullWidth id="outlined-basic" variant="outlined"  placeholder="Type a message..." value={latestMessage} onChange={handleTyping}
+                    style={{
+                      backgroundColor:"#fff",
+                      borderRadius:10,
+                    }}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
                           <IconButton onClick={() => setIsEmoji(!isEmoji)}>
-                            <SentimentSatisfiedAltIcon/>
+                            {/* <SentimentSatisfiedAltIcon/> */}
+                            {
+                              isEmoji ? (
+                                <EmojiEmotionsIcon/>
+                              ):(
+                                <SentimentSatisfiedAltIcon/>
+                              )
+                            }
                           </IconButton>
                           <IconButton onClick={() => sendMessage({key:"Enter"})}>
                             <SendIcon/>
