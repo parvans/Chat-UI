@@ -35,6 +35,27 @@ export const userRegister = async (body) => {
     let data = await response?.json();
     return { data: data, ok: true }
 }
+
+export const userEdit=async(body)=>{
+    const requestOptions = {
+        method: "PUT",
+        mode: "cors",
+        headers: { 
+            "Content-Type": "application/json",
+            "auth-token":token 
+        },
+        body: JSON.stringify(body)
+    }
+    const response = await fetch(baseUrl + "user/useredit", requestOptions)
+    if (!response.ok) {
+        let data = await response.json();
+        return { data: data, ok: false }
+    }
+    let data = await response?.json();
+    return { data: data, ok: true }
+}
+
+
 export const verifyUserEmail = async (body) => {
     const requestOptions = {
         method: "POST",

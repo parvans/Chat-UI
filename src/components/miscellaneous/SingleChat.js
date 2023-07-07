@@ -34,8 +34,6 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [isEmoji, setIsEmoji] = useState(false);
-
-
   // var pp=navigator.onLine;
   // console.log(pp);
   const defaultOptions={
@@ -52,6 +50,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
     try {
       setLoading(true);
       const res = await fetcheMessages(selectedChat?._id);
+      
       if(res.ok){
         setMessages(res?.data?.data);
         setLoading(false);
@@ -62,6 +61,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
       console.log(error);
     }
   }
+
   const sendMessage = async (event) => {
     if(event.key === "Enter" && latestMessage){
       socket.emit('stop typing', selectedChat?._id);
@@ -89,12 +89,15 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
     socket.on('connected',()=>setSocketConnection(true))
     socket.on('typing', () =>setIsTyping(true));
     socket.on('stop typing', () =>setIsTyping(false));
+
   },[])
 
+  // console.log(datas);
 
 
   useEffect(() => {
     getMessages();
+    // handleUserStatus();
     selectedChatCompare = selectedChat;
   }, [selectedChat]);
 
@@ -115,7 +118,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   });
 
   console.log(notifications);
-
+  console.log(selectedChat);
 
   const handleTyping = (e) => {
     setLatestMessage(e.target.value);
