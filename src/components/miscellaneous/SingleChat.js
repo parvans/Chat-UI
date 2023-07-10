@@ -28,6 +28,7 @@ var socket,selectedChatCompare;
 export default function SingleChat({ fetchAgain, setFetchAgain }) {
   const {selectedChat, setSelectedChat,notifications,setNotifications} = ChatState();
   const [messages, setMessages] = useState([]);
+  const [onlineUsers, setOnlineUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [latestMessage, setLatestMessage] = useState();
   const [socketConnection, setSocketConnection] = useState(false);
@@ -83,22 +84,36 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
     }
   };
 
+  const handleOnlineStatus = (chat) => {
+    if(!chat) return;
+    const chatMembers=chat?.users.find((user)=>user._id!==jwtDecode(localStorage.getItem("auth-token")).id);
+    // console.log(chatMembers._id);
+    const online=onlineUsers.find((user)=>user.userId===chatMembers._id);
+    // console.log(online);
+    return online? true:false;
+  }
+
   useEffect(() => {
     socket = io(ENDPOINT);
     socket.emit('setup', jwtDecode(localStorage.getItem("auth-token")));
+    socket.on('get-users', (users) => {
+      setOnlineUsers(users);
+    });
     socket.on('connected',()=>setSocketConnection(true))
     socket.on('typing', () =>setIsTyping(true));
     socket.on('stop typing', () =>setIsTyping(false));
 
   },[])
 
-  // console.log(datas);
-
+  // console.log(onlineUsers);
+  // console.log(selectedChat);
 
   useEffect(() => {
     getMessages();
-    // handleUserStatus();
+
     selectedChatCompare = selectedChat;
+
+    handleOnlineStatus();
   }, [selectedChat]);
 
 
@@ -117,8 +132,8 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
     })
   });
 
-  console.log(notifications);
-  console.log(selectedChat);
+  // console.log(notifications);
+  // console.log(selectedChat);
 
   const handleTyping = (e) => {
     setLatestMessage(e.target.value);
@@ -172,6 +187,21 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
               {
                 selectedChat?.users[0]._id===jwtDecode(localStorage.getItem("auth-token")).id ? selectedChat?.users[1]?.name.toUpperCase():selectedChat?.users[0]?.name.toUpperCase()
               }
+            </Text>
+            <Text fontSize={12} color="gray.500">
+          {
+            handleOnlineStatus(selectedChat) ? (
+              <div style={{display:"flex",flexDirection:"row",alignItems:"center"}}>
+              <div style={{width:10,height:10,borderRadius:10,backgroundColor:"green",marginRight:5}}/>
+              Online
+              </div>
+            ) : (
+              <div style={{display:"flex",flexDirection:"row",alignItems:"center"}}>
+              <div style={{width:10,height:10,borderRadius:10,backgroundColor:"red",marginRight:5}}/>
+              Offline
+              </div>
+            )
+          }
             </Text>
             </div>
             
