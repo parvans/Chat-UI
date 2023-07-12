@@ -8,10 +8,13 @@ import jwtDecode from "jwt-decode";
 import { getSender } from "config/ChatLogic";
 import GroupChatModal from "./GroupChatModal";
 import './styles.css'
+import useSound from 'use-sound';
+import message1 from '../../assets/audio/message1.mp3'
 export default function MyChats({fetchAgain,setFetchAgain}) {
   const [loggedUser, setLoggedUser] = useState();
   const { selectedChat, user, setSelectedChat, chats, setChats ,windowWidth} = ChatState();
   const userId=jwtDecode(localStorage.getItem("auth-token"))
+  const [play] = useSound(message1);
   const fetchChat = async () => {
     try {
       const res = await getChats();
@@ -42,6 +45,9 @@ export default function MyChats({fetchAgain,setFetchAgain}) {
                   Group Chat <AddIcon mr={2} mb={3} ml={5} />
                   </Button>       
                 </GroupChatModal>
+                {/* <Button className="btn btn-primary btn-md  mt-1 ml-4 " onClick={play}>
+                  Test  <AddIcon mr={2} mb={3} ml={5} />
+                  </Button>   */}
               </CardHeader>
             <CardBody>
               <div>

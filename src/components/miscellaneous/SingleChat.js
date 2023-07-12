@@ -22,6 +22,8 @@ import Picker from '@emoji-mart/react'
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import message1 from '../../assets/audio/message1.mp3'
+import useSound from 'use-sound';
 //==================================================================>>
 
 const ENDPOINT = "http://192.168.1.41:9000";
@@ -37,6 +39,8 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [isEmoji, setIsEmoji] = useState(false);
+  const [play] = useSound(message1);
+
   // var pp=navigator.onLine;
   // console.log(pp);
   const defaultOptions={
@@ -121,7 +125,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
 
   useEffect(() => {
     socket.on('message received', (newMessage) => {
-      // console.log(newMessage );
+      play();
       if(!selectedChatCompare||selectedChatCompare._id!==newMessage.chat._id){
         //notification
         if(!notifications.includes(newMessage)){
@@ -275,7 +279,9 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
-                          <IconButton onClick={() => setIsEmoji(!isEmoji)}>
+                          <IconButton onClick={() => {
+                            play()
+                            setIsEmoji(!isEmoji)}}>
                             {/* <SentimentSatisfiedAltIcon/> */}
                             {
                               isEmoji ? (

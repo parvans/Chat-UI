@@ -43,7 +43,8 @@
     "reactstrap": "8.7.1",
     "sass": "1.53.0",
     "socket.io-client": "^4.7.1",
-    "thousands-counter": "^2.1.1"
+    "thousands-counter": "^2.1.1",
+    "use-sound": "^4.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
