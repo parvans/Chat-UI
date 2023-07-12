@@ -7,8 +7,11 @@ const ChatProvider = ({ children }) => {
   const [user, setUser] = useState();
   const [selectedChat, setSelectedChat] = useState();
   const [chats,setChats]=useState([])
-  const [notifications,setNotifications]=useState([])
+  const [notifications,setNotifications]=useState([]);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
   const history=useHistory()
+
   useEffect(()=>{
     const userInfo=localStorage.getItem('auth-token')
     setUser(userInfo)
@@ -17,8 +20,21 @@ const ChatProvider = ({ children }) => {
         history?.push('/')
     }
   },[history])
+
+  useEffect(() => {
+    const handleWindowResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleWindowResize);
+
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+    };
+  });
+
   return (
-    <ChatContext.Provider value={{ user, setUser,selectedChat,setSelectedChat,chats,setChats,notifications,setNotifications}}>
+    <ChatContext.Provider value={{ user, setUser,selectedChat,setSelectedChat,chats,setChats,notifications,setNotifications,windowWidth, setWindowWidth}}>
       {children}
     </ChatContext.Provider>
   );

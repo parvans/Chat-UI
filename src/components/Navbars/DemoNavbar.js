@@ -154,7 +154,7 @@ function Header(props) {
   };
   // function that adds color dark/transparent to the navbar on resize (this is for the collapse)
   const updateColor = () => {
-    if (window.innerWidth < 993 && isOpens) {
+    if (window.innerWidth <=993 && isOpens) {
       setColor("dark");
     } else {
       setColor("transparent");
@@ -173,7 +173,7 @@ function Header(props) {
   });
   React.useEffect(() => {
     if (
-      window.innerWidth < 993 &&
+      window.innerWidth <= 993 &&
       document.documentElement.className.indexOf("nav-open") !== -1
     ) {
       document.documentElement.classList.toggle("nav-open");
@@ -232,6 +232,7 @@ function Header(props) {
             Chatbot <Badge color="dark">Beta</Badge>
             
             </NavbarBrand>
+            
         </div>
           {/* <Badge color="danger" pill style={{ position: "absolute", top: "0px", right: "0px" }} >
                 1000
@@ -245,6 +246,7 @@ function Header(props) {
           <span className="navbar-toggler-bar navbar-kebab" />
           <span className="navbar-toggler-bar navbar-kebab" />
           <span className="navbar-toggler-bar navbar-kebab" />
+          
         </NavbarToggler>
         
         <Collapse isOpen={isOpens} navbar className="justify-content-end">

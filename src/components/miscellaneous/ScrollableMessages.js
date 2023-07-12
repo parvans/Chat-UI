@@ -13,8 +13,17 @@ export default function ScrollableMessages({messages}) {
     const uId=jwtDecode(userId)?.id;
 
     const groupedDays = messages.reduce((groups, message) => {
-        const date = moment().diff(message.createdAt, 'days') === 0 ? 'Today' : moment(message.createdAt).format('DD/MM/YYYY');
-        // console.log(moment(message.createdAt).format('DD/MM/YYYY'));
+        //const date = moment(message.createdAt).format('DD/MM/YYYY')
+        const isSameorAfter= moment(message.createdAt).calendar({
+            sameDay: '[Today] ',
+            nextDay: '[Tomorrow] ',
+            nextWeek: 'dddd',
+            lastDay: '[Yesterday] ',
+            lastWeek: '[Last] dddd',
+            sameElse: 'DD/MM/YYYY'
+        });
+        //console.log(isSameorAfter);
+        const date = isSameorAfter;
         if (!groups[date]) {
             groups[date] = [];
         }
@@ -29,7 +38,7 @@ export default function ScrollableMessages({messages}) {
             messages: groupedDays[date]
         };
     });
-    console.log(groupArrays);
+    // console.log(groupArrays);
   return (
      <ScrollableFeed className='scroll-vard'>
         <>
@@ -37,8 +46,11 @@ export default function ScrollableMessages({messages}) {
         {
             groupArrays.map((group,index)=>(
                 <div key={index}>
-                    <div className="date" style={{textAlign:"center",marginTop:"10px",marginBottom:"10px",color:"white", fontWeight:"bold",fontSize:"20px"}}>
+                    <div className=" date" style={{textAlign:"center",marginTop:"10px",marginBottom:"10px",color:"#adadad", fontWeight:"bold",fontSize:"15px"}}>
+                        <span style={{backgroundColor:"#454242",padding:"5px 10px",borderRadius:"10px"}}>
+                        
                         {group.date}
+                        </span>
                     </div>
                     <div className="messages">
                         {

@@ -7,11 +7,11 @@ import { getChats } from "utilities/apiService";
 import jwtDecode from "jwt-decode";
 import { getSender } from "config/ChatLogic";
 import GroupChatModal from "./GroupChatModal";
+import './styles.css'
 export default function MyChats({fetchAgain,setFetchAgain}) {
   const [loggedUser, setLoggedUser] = useState();
-  const { selectedChat, user, setSelectedChat, chats, setChats } = ChatState();
+  const { selectedChat, user, setSelectedChat, chats, setChats ,windowWidth} = ChatState();
   const userId=jwtDecode(localStorage.getItem("auth-token"))
-  // console.log(userId);
   const fetchChat = async () => {
     try {
       const res = await getChats();
@@ -29,8 +29,12 @@ export default function MyChats({fetchAgain,setFetchAgain}) {
   }, [fetchAgain]);
 
   return (
-        <Col md="4">
-          <Card className="card-user" style={{backgroundColor:"black",height:"100%"}}>
+        <Col //md="4"
+        // md="12" 
+         style={ windowWidth <= 993 ? selectedChat ? {display:"none"} : {display:"block"} : {display:"block"}}
+        md={windowWidth <= 993 ? "12" : "4"}
+        >
+          <Card className="card-user" id="mychat">
               <CardHeader className="d-flex justify-content-between">
                 <h5 className="title mt-1" style={{color:"white"}}>My Chats</h5>
                 <GroupChatModal>

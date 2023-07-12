@@ -20,6 +20,8 @@ import SendIcon from '@mui/icons-material/Send';
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 //==================================================================>>
 
 const ENDPOINT = "http://192.168.1.41:9000";
@@ -232,7 +234,13 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
         }}>
         {
                 loading ? (
-                  <Spinner color="primary"/>
+                  // <Spinner color="primary"/>
+                  <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
 
                 ):(
                   <div className="messages">
@@ -259,7 +267,6 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                         <></>
                       )
                     }
-                    {/* <input type="text" className="form-control" placeholder="Type a message" value={latestMessage} onChange={handleTyping} /> */}
                     <TextField  fullWidth id="outlined-basic" variant="outlined"  placeholder="Type a message..." value={latestMessage} onChange={handleTyping}
                     style={{
                       backgroundColor:"#fff",
@@ -291,7 +298,9 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                           <div style={{position:"absolute",bottom:100,right:10}}>
                             <Picker 
                             data={data} 
-                            onEmojiSelect={onEmojiClick} />
+                            onEmojiSelect={onEmojiClick}
+                            width={300}
+                             />
                           </div>
                         )
                      }
