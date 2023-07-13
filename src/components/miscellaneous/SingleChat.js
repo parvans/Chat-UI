@@ -24,6 +24,7 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import message1 from '../../assets/audio/message1.mp3'
 import useSound from 'use-sound';
+import { editMessage } from "utilities/apiService";
 //==================================================================>>
 
 const ENDPOINT = "http://192.168.1.41:9000";
@@ -40,6 +41,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   const [isTyping, setIsTyping] = useState(false);
   const [isEmoji, setIsEmoji] = useState(false);
   const [play] = useSound(message1);
+  const [message, setMessage] = useState()
 
   // var pp=navigator.onLine;
   // console.log(pp);
@@ -62,12 +64,48 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
         setMessages(res?.data?.data);
         setLoading(false);
         socket.emit('join room', selectedChat?._id);
+        socket.on('message received',(newMessage) => {
+          if(newMessage){
+            play();
+            setMessage(newMessage)
+            // if(newMessage.chat.users.find((user=>user._id===jwtDecode(localStorage.getItem("auth-token")).id))){
+             
+            //     const res=await editMessage({
+            //       isPending:false,
+            //       isSend:true,
+            //     },newMessage._id)
+            //     console.log(res);
+            //     console.log("received");
+              
+            // }
+          }})
+
       }
-      // console.log(messages);
+
     } catch (error) {
       console.log(error);
     }
   }
+
+  // const messageStatus = async()=>{
+
+  //   try {
+  //     console.log(message);
+  //     if(!message) return;
+  //     if(message.chat.users.find((user=>user._id===jwtDecode(localStorage.getItem("auth-token")).id))){
+  //       const res=await editMessage({
+  //         isPending:false,
+  //         isSend:true,
+  //       },message._id)
+  //       console.log(res);
+  //       console.log("received");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+    
+
+  // }
 
   const sendMessage = async (event) => {
     if(event.key === "Enter" && latestMessage){
@@ -90,6 +128,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
     }
   };
 
+
   const handleOnlineStatus = (chat) => {
     if(!chat) return;
     const chatMembers=chat?.users.find((user)=>user._id!==jwtDecode(localStorage.getItem("auth-token")).id);
@@ -98,6 +137,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
     // console.log(online);
     return online? true:false;
   }
+
 
   useEffect(() => {
     socket = io(ENDPOINT);
@@ -122,10 +162,13 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
     handleOnlineStatus();
   }, [selectedChat]);
 
+  // useEffect(() => {
+  //   messageStatus();
+  // });
+
 
   useEffect(() => {
-    socket.on('message received', (newMessage) => {
-      play();
+    socket.on('message received', async(newMessage) => {
       if(!selectedChatCompare||selectedChatCompare._id!==newMessage.chat._id){
         //notification
         if(!notifications.includes(newMessage)){
@@ -133,10 +176,13 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
           setFetchAgain(!fetchAgain);
         }
       }else{
+
         setMessages([...messages,newMessage])
       }
     })
   });
+  // console.log(notifications);
+  
 
   // console.log(notifications);
   // console.log(selectedChat);
@@ -233,24 +279,28 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
         <div style={{
           display:"flex",flexDirection:"column",justifyContent:"flex-end",
           width:"100%",height:"80vh",overflow:"hidden",
-          padding:10,borderRadius:10,backgroundImage:"url('https://w0.peakpx.com/wallpaper/818/148/HD-wallpaper-whatsapp-background-cool-dark-green-new-theme-whatsapp.jpg')",
-          
-        }}>
+          padding:10,borderRadius:10,backgroundImage:"url('https://w0.peakpx.com/wallpaper/818/148/HD-wallpaper-whatsapp-background-cool-dark-green-new-theme-whatsapp.jpg')"}}>
         {
-                loading ? (
-                  // <Spinner color="primary"/>
-                  <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loading}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
+          // loading ? (
+          //   // <Spinner color="primary"/>
+          //   <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
+          //     <CircularProgress color="inherit" />
+          //   </Backdrop>
 
+          //   ):(
+            <>
+            <div className="messages">
+              {
+                loading ?(
+                  <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
+               <CircularProgress color="inherit" />
+                </Backdrop>
                 ):(
-                  <div className="messages">
-                    <ScrollableMessages messages={messages}/>
-                    </div>
-                )}
+                  <ScrollableMessages messages={messages}/>
+                )
+              }
+              </div>
+             {/* )} */}
                   <FormControl onKeyDown={sendMessage} isRequired mt={3}>
                     {
                       isTyping ? (
@@ -313,6 +363,8 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                     {/* <EmojiPicker /> */}
                     
                  </FormControl>
+                 </>
+        }
         </div>
         </>
       ) : (

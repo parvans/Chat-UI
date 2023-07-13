@@ -1,3 +1,4 @@
+import { min } from 'moment'
 import React, { useEffect, useState } from 'react'
 import { toast, Toaster } from 'react-hot-toast'
 import { useHistory } from 'react-router-dom'
@@ -7,6 +8,7 @@ import { userResetPassword } from 'utilities/apiService'
 import { verifyUserOtp } from 'utilities/apiService'
 import { userRegister } from 'utilities/apiService'
 import { userLogin } from 'utilities/apiService'
+import chatbot from '../../../assets/img/Chat bot-amico.png'
 export default function Login() {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
@@ -254,6 +256,20 @@ export default function Login() {
     }
     return (
         <div className='bg-light min-vh-100 d-flex flex-row align-items-center'>
+            <Container style={{
+                backgroundColor: '#6bd098',
+                minHeight: '100vh',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
+                <Row>
+                    <Col className='justify-content-center d-flex flex-column align-items-center'>
+                        <img src={chatbot} alt='logo' style={{ width: '70%', height: '70%' }} />
+                    </Col>
+                </Row>
+            </Container>
             <Container>
                 <Row className='justify-content-center'>
                     <Col md={8}>
@@ -371,7 +387,9 @@ export default function Login() {
                         </CardGroup>
                     </Col>
                 </Row>
+                
             </Container>
+            
             <Toaster
                 position='top-center'
                 reverseOrder={false}

@@ -269,6 +269,26 @@ export const fetcheMessages = async (chatId) => {
     return { data: data, ok: true }
 }
 
+export const editMessage = async (body,id) => {
+    const requestOptions = {
+        method: "PUT",
+        mode: "cors",
+        headers: { 
+            "Content-Type": "application/json", 
+            "auth-token": token 
+        },
+        body: JSON.stringify(body)
+    }
+    const response = await fetch(baseUrl + `message/editmessage/${id}`, requestOptions)
+    if (!response.ok) {
+        let data = await response.json();
+        return { data: data, ok: false }
+    }
+    // console.log(response)
+    let data = await response?.json();
+    return { data: data, ok: true }
+}
+
 
 
 
