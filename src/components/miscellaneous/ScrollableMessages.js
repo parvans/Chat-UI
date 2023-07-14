@@ -56,6 +56,7 @@ export default function ScrollableMessages({ messages }) {
               {group.messages &&
                 group.messages.map((message, index) => (
                   <div style={{ display: "flex" }} key={message._id}>
+                    
                     {(isSameSender(group.messages, message, index, uId) ||
                       isLastMessage(group.messages, index, uId)) && (
                       <Tooltip
@@ -75,10 +76,9 @@ export default function ScrollableMessages({ messages }) {
                           message.sender._id === uId ? "#BEE3F8" : "#B9F5D0"
                         }`,
                         borderRadius: `${   
-                            isSameSender(group.messages, message, index, uId) ||
-                            isLastMessage(group.messages, index, uId)
-                            ? "0px 10px 10px 10px"
-                            : "10px 0px 10px 10px"
+                          message.sender._id === uId
+                          ? "10px 0px 10px 10px"
+                          : "0px 10px 10px 10px"
                         }`,
                         
 
@@ -120,16 +120,16 @@ export default function ScrollableMessages({ messages }) {
                         message.sender._id === uId && 
                         <>
                             {/* For message not sent  */}
-                            { message.isPending && <AccessTimeIcon style={{fontSize: ".6875rem", color: "gray", marginLeft: "5px"}}/> }
+                            {message.status==="pending" && <AccessTimeIcon style={{fontSize: ".6875rem", color: "gray", marginLeft: "5px"}}/>  }
 
                             {/* For message send  */}
-                            { message.isSend && <DoneIcon style={{fontSize: "15px", color: "gray", marginLeft: "5px"}}/>  }
+                             {message.status==="send" && <DoneIcon style={{fontSize: "15px", color: "gray", marginLeft: "5px"}}/>   }
 
                             {/* For message not seen   */}
-                            { message.isRead && <DoneAllIcon style={{fontSize: ".6875rem", color: "gray", marginLeft: "5px"}}/>  }
+                            {message.status==="received" && <DoneAllIcon style={{fontSize: ".6875rem", color: "gray", marginLeft: "5px"}}/>   }
 
                             {/* For message seen  */}
-                            {/* <DoneAllIcon style={{fontSize: ".6875rem", color: "#2cbae7", marginLeft: "5px"}}/> */}
+                            { message.status==="seen" && <DoneAllIcon style={{fontSize: ".6875rem", color: "#2cbae7", marginLeft: "5px"}}/> }
                         </>
 
                         

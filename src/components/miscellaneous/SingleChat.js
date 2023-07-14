@@ -68,17 +68,13 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
           if(newMessage){
             play();
             setMessage(newMessage)
-            // if(newMessage.chat.users.find((user=>user._id===jwtDecode(localStorage.getItem("auth-token")).id))){
-             
-            //     const res=await editMessage({
-            //       isPending:false,
-            //       isSend:true,
-            //     },newMessage._id)
-            //     console.log(res);
-            //     console.log("received");
-              
-            // }
           }})
+
+          // if(handleOnlineStatus(selectedChat)){
+
+          // }
+
+          
 
       }
 
@@ -87,36 +83,15 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
     }
   }
 
-  // const messageStatus = async()=>{
-
-  //   try {
-  //     console.log(message);
-  //     if(!message) return;
-  //     if(message.chat.users.find((user=>user._id===jwtDecode(localStorage.getItem("auth-token")).id))){
-  //       const res=await editMessage({
-  //         isPending:false,
-  //         isSend:true,
-  //       },message._id)
-  //       console.log(res);
-  //       console.log("received");
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-    
-
-  // }
 
   const sendMessage = async (event) => {
     if(event.key === "Enter" && latestMessage){
       socket.emit('stop typing', selectedChat?._id);
       try {
-        // console.log(selectedChat);
         const res=await sendUserMessage({
           chatId:selectedChat?._id,
           cotent:latestMessage
         })
-        // console.log(res?.data?.data);
         setLatestMessage("")
         if(res.ok){
           socket.emit('new message', res?.data?.data);
@@ -156,19 +131,14 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
 
   useEffect(() => {
     getMessages();
-
     selectedChatCompare = selectedChat;
-
     handleOnlineStatus();
   }, [selectedChat]);
 
-  // useEffect(() => {
-  //   messageStatus();
-  // });
 
 
   useEffect(() => {
-    socket.on('message received', async(newMessage) => {
+    socket.on('message received',(newMessage) => {
       if(!selectedChatCompare||selectedChatCompare._id!==newMessage.chat._id){
         //notification
         if(!notifications.includes(newMessage)){
@@ -176,16 +146,21 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
           setFetchAgain(!fetchAgain);
         }
       }else{
-
-        setMessages([...messages,newMessage])
+         setMessages([...messages,newMessage])
+         socket.emit('messageSend',newMessage?._id);
       }
     })
-  });
-  // console.log(notifications);
-  
 
-  // console.log(notifications);
-  // console.log(selectedChat);
+    socket.on('messageStatusUpdated',(updatedMessage) => {
+      setMessages(prevMessages=>prevMessages.map(message=>message._id===updatedMessage._id?updatedMessage:message))
+    })
+
+    // return () => {
+    //   socket.off('message received');
+    //   socket.off('messageStatusUpdated');
+    // }
+
+  });
 
   const handleTyping = (e) => {
     setLatestMessage(e.target.value);
