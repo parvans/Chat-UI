@@ -256,7 +256,7 @@ export default function Login() {
     }
     return (
         <div className='bg-light min-vh-100 d-flex flex-row align-items-center'>
-            <Container style={{
+            {/* <Container style={{
                 backgroundColor: '#6bd098',
                 minHeight: '100vh',
                 display: 'flex',
@@ -269,7 +269,7 @@ export default function Login() {
                         <img src={chatbot} alt='logo' style={{ width: '70%', height: '70%' }} />
                     </Col>
                 </Row>
-            </Container>
+            </Container> */}
             <Container>
                 <Row className='justify-content-center'>
                     <Col md={8}>

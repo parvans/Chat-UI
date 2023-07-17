@@ -1,7 +1,7 @@
 import { FormControl, Text } from "@chakra-ui/react";
 import { ChatState } from "context/ChatProvider";
 import React, { useEffect, useState } from "react";
-import { Button, Spinner } from "reactstrap";
+import { Button } from "reactstrap";
 import selcetchat from "../../assets/img/selectchat.png";
 import jwtDecode from "jwt-decode";
 import ProfileModal from "./ProfileModal";
@@ -24,7 +24,7 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import message1 from '../../assets/audio/message1.mp3'
 import useSound from 'use-sound';
-import { editMessage } from "utilities/apiService";
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 //==================================================================>>
 
 const ENDPOINT = "http://192.168.1.41:9000";
@@ -41,10 +41,15 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   const [isTyping, setIsTyping] = useState(false);
   const [isEmoji, setIsEmoji] = useState(false);
   const [play] = useSound(message1);
-  const [message, setMessage] = useState()
+
+  const [messageSend,setMessageSend]=useState(false);
+  const [messageReceived,setMessageReceived]=useState(false);
+  const [messageSeen,setMessageSeen]=useState(false);
+  const [messageId,setMessageId]=useState();
 
   // var pp=navigator.onLine;
   // console.log(pp);
+
   const defaultOptions={
     loop:true,
     autoplay:true,
@@ -66,16 +71,9 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
         socket.emit('join room', selectedChat?._id);
         socket.on('message received',(newMessage) => {
           if(newMessage){
-            play();
-            setMessage(newMessage)
-          }})
-
-          // if(handleOnlineStatus(selectedChat)){
-
-          // }
-
-          
-
+            // play();
+          }
+        })
       }
 
     } catch (error) {
@@ -87,6 +85,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   const sendMessage = async (event) => {
     if(event.key === "Enter" && latestMessage){
       socket.emit('stop typing', selectedChat?._id);
+      
       try {
         const res=await sendUserMessage({
           chatId:selectedChat?._id,
@@ -95,8 +94,10 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
         setLatestMessage("")
         if(res.ok){
           socket.emit('new message', res?.data?.data);
+          setMessageId(res?.data?.data?._id)
           setMessages([...messages,res?.data?.data])
         }
+        
       } catch (error) {
         console.log(error);
       }
@@ -104,14 +105,14 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   };
 
 
+
   const handleOnlineStatus = (chat) => {
     if(!chat) return;
     const chatMembers=chat?.users.find((user)=>user._id!==jwtDecode(localStorage.getItem("auth-token")).id);
-    // console.log(chatMembers._id);
     const online=onlineUsers.find((user)=>user.userId===chatMembers._id);
-    // console.log(online);
     return online? true:false;
   }
+  
 
 
   useEffect(() => {
@@ -126,19 +127,20 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
 
   },[])
 
-  // console.log(onlineUsers);
-  // console.log(selectedChat);
-
   useEffect(() => {
     getMessages();
     selectedChatCompare = selectedChat;
     handleOnlineStatus();
+
   }, [selectedChat]);
 
 
 
+
   useEffect(() => {
+    socket.emit('messageSend',messageId);
     socket.on('message received',(newMessage) => {
+      // socket.emit('messageReceived',newMessage?._id);
       if(!selectedChatCompare||selectedChatCompare._id!==newMessage.chat._id){
         //notification
         if(!notifications.includes(newMessage)){
@@ -147,18 +149,13 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
         }
       }else{
          setMessages([...messages,newMessage])
-         socket.emit('messageSend',newMessage?._id);
       }
     })
 
     socket.on('messageStatusUpdated',(updatedMessage) => {
-      setMessages(prevMessages=>prevMessages.map(message=>message._id===updatedMessage._id?updatedMessage:message))
+      setMessages(prevMessages=>prevMessages.map(message=>message?._id===updatedMessage?._id?updatedMessage:message))
     })
 
-    // return () => {
-    //   socket.off('message received');
-    //   socket.off('messageStatusUpdated');
-    // }
 
   });
 
@@ -277,7 +274,8 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
               </div>
              {/* )} */}
                   <FormControl onKeyDown={sendMessage} isRequired mt={3}>
-                    {
+                   
+                    { 
                       isTyping ? (
                         <div>
                           
@@ -304,8 +302,9 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
+                          <AttachFileIcon/>
                           <IconButton onClick={() => {
-                            play()
+                            // play()
                             setIsEmoji(!isEmoji)}}>
                             {/* <SentimentSatisfiedAltIcon/> */}
                             {

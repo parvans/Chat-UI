@@ -9,7 +9,7 @@ export default function ChatArea() {
     const {user,selectedChat, setSelectedChat,windowWidth}=ChatState()
     const [fetchAgain,setFetchAgain]=useState(false)
 
-  console.log(windowWidth);
+  //console.log(windowWidth);
   return (
     <>
 

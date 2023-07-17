@@ -43,7 +43,7 @@ export default function ScrollableMessages({ messages }) {
       messages: groupedDays[date],
     };
   });
-   console.log(groupArrays);
+  //  console.log(groupArrays);
   return (
     <ScrollableFeed className="scroll-vard">
       <>
@@ -120,16 +120,16 @@ export default function ScrollableMessages({ messages }) {
                         message.sender._id === uId && 
                         <>
                             {/* For message not sent  */}
-                            {message.status==="pending" && <AccessTimeIcon style={{fontSize: ".6875rem", color: "gray", marginLeft: "5px"}}/>  }
+                            {message.status==="pending" && <AccessTimeIcon style={{fontSize: ".6879rem", color: "gray", marginLeft: "5px"}}/>  }
 
                             {/* For message send  */}
                              {message.status==="send" && <DoneIcon style={{fontSize: "15px", color: "gray", marginLeft: "5px"}}/>   }
 
                             {/* For message not seen   */}
-                            {message.status==="received" && <DoneAllIcon style={{fontSize: ".6875rem", color: "gray", marginLeft: "5px"}}/>   }
+                            {message.status==="received" && <DoneAllIcon style={{fontSize: "15px", color: "gray", marginLeft: "5px"}}/>   }
 
                             {/* For message seen  */}
-                            { message.status==="seen" && <DoneAllIcon style={{fontSize: ".6875rem", color: "#2cbae7", marginLeft: "5px"}}/> }
+                            { message.status==="seen" && <DoneAllIcon style={{fontSize: "15px", color: "#2cbae7", marginLeft: "5px"}}/> }
                         </>
 
                         

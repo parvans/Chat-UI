@@ -268,7 +268,7 @@ function Header(props) {
               {notifications?.length === 0 && <h5>No Notifications</h5>}
 
               {
-                notifications?.map((notification)=>(<Notify notification={notification}/>))
+                notifications?.map((notification)=>(<Notify notification={notification} key={notification?._id}/>))
               }
             </div>
           </MenuList>
