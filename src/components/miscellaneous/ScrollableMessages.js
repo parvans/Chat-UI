@@ -13,6 +13,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { Spinner } from "reactstrap";
+import { useEffect } from "react";
 export default function ScrollableMessages({ messages }) {
   const userId = localStorage.getItem("auth-token");
   const uId = jwtDecode(userId)?.id;
@@ -44,6 +45,7 @@ export default function ScrollableMessages({ messages }) {
     };
   });
   //  console.log(groupArrays);
+
   return (
     <ScrollableFeed className="scroll-vard">
       <>

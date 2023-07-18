@@ -25,6 +25,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import message1 from '../../assets/audio/message1.mp3'
 import useSound from 'use-sound';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
+import { m } from "framer-motion";
 //==================================================================>>
 
 const ENDPOINT = "http://192.168.1.41:9000";
@@ -42,11 +43,6 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   const [isEmoji, setIsEmoji] = useState(false);
   const [play] = useSound(message1);
 
-  const [messageSend,setMessageSend]=useState(false);
-  const [messageReceived,setMessageReceived]=useState(false);
-  const [messageSeen,setMessageSeen]=useState(false);
-  const [messageId,setMessageId]=useState();
-
   // var pp=navigator.onLine;
   // console.log(pp);
 
@@ -59,6 +55,22 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
     }
   }
 
+  const handleMessageSend = (messageId) => {
+    socket.emit('messageSend',messageId);
+  }
+
+  const handleMessageSeen = (messageId) => {
+    socket.emit('messageSeen',messageId);
+  }
+
+  const handleMessageReceived = (messageId) => {
+    socket.emit('messageReceived',messageId);
+  }
+
+  const handleAllMessagesSeen = () => {
+    socket.emit('allMessageSeen',selectedChat?._id);
+  }
+
   const getMessages = async () => {
     if(!selectedChat) return;
     try {
@@ -69,11 +81,11 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
         setMessages(res?.data?.data);
         setLoading(false);
         socket.emit('join room', selectedChat?._id);
-        socket.on('message received',(newMessage) => {
-          if(newMessage){
-            // play();
-          }
-        })
+        // socket.on('message received',(newMessage) => {
+        //   if(newMessage){
+        //      play();
+        //   }
+        // })
       }
 
     } catch (error) {
@@ -93,8 +105,8 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
         })
         setLatestMessage("")
         if(res.ok){
+          handleMessageSend(res?.data?.data?._id); 
           socket.emit('new message', res?.data?.data);
-          setMessageId(res?.data?.data?._id)
           setMessages([...messages,res?.data?.data])
         }
         
@@ -134,30 +146,37 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
 
   }, [selectedChat]);
 
-
-
-
+  
   useEffect(() => {
-    socket.emit('messageSend',messageId);
     socket.on('message received',(newMessage) => {
-      // socket.emit('messageReceived',newMessage?._id);
       if(!selectedChatCompare||selectedChatCompare._id!==newMessage.chat._id){
         //notification
         if(!notifications.includes(newMessage)){
           setNotifications([newMessage,...notifications])
           setFetchAgain(!fetchAgain);
         }
+        handleMessageSend(newMessage?._id);
+        setTimeout(() => {
+        handleMessageReceived(newMessage?._id);
+        }, 1000);
       }else{
-         setMessages([...messages,newMessage])
+        setMessages([...messages,newMessage])
+        handleMessageSeen(newMessage?._id);
+        handleAllMessagesSeen();
       }
     })
-
+    
     socket.on('messageStatusUpdated',(updatedMessage) => {
       setMessages(prevMessages=>prevMessages.map(message=>message?._id===updatedMessage?._id?updatedMessage:message))
     })
 
 
   });
+
+  
+
+
+  
 
   const handleTyping = (e) => {
     setLatestMessage(e.target.value);

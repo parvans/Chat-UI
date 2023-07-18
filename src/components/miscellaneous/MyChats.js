@@ -1,5 +1,5 @@
 import { AddIcon } from "@chakra-ui/icons";
-import { Box, Stack, Text } from "@chakra-ui/react";
+import {Box, Stack, Text } from "@chakra-ui/react";
 import { ChatState } from "context/ChatProvider";
 import React, { useEffect, useState } from "react";
 import { Button, Card, CardBody, CardFooter, CardHeader, CardTitle, Col, Row, Spinner } from "reactstrap";
@@ -10,11 +10,16 @@ import GroupChatModal from "./GroupChatModal";
 import './styles.css'
 import useSound from 'use-sound';
 import message1 from '../../assets/audio/message1.mp3'
+import Avatar from '@mui/material/Avatar';
+import { IconButton, Tooltip } from "@mui/material";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 export default function MyChats({fetchAgain,setFetchAgain}) {
   const [loggedUser, setLoggedUser] = useState();
   const { selectedChat, user, setSelectedChat, chats, setChats ,windowWidth} = ChatState();
   const userId=jwtDecode(localStorage.getItem("auth-token"))
   const [play] = useSound(message1);
+
+  
   const fetchChat = async () => {
     try {
       const res = await getChats();
@@ -39,15 +44,26 @@ export default function MyChats({fetchAgain,setFetchAgain}) {
         >
           <Card className="card-user" id="mychat">
               <CardHeader className="d-flex justify-content-between">
-                <h5 className="title mt-1" style={{color:"white"}}>My Chats</h5>
+                {/* <h5 className="title mt-1" style={{color:"white"}}>My Chats</h5> */}
+                  <Avatar src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80" sx={{ width: 40, height: 40 }} />
                 <GroupChatModal>
                 <Button className="btn btn-success btn-md  mt-1 ml-4 " >
                   Group Chat <AddIcon mr={2} mb={3} ml={5} />
                   </Button>       
                 </GroupChatModal>
-                {/* <Button className="btn btn-primary btn-md  mt-1 ml-4 " onClick={play}>
-                  Test  <AddIcon mr={2} mb={3} ml={5} />
-                  </Button>   */}
+
+{/* <Tooltip title="Account settings">
+          <IconButton
+            onClick={handleClick}
+            size="small"
+            sx={{ ml: 2 }}
+            aria-controls={open ? 'account-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? 'true' : undefined}
+          >
+           <MoreVertIcon />
+          </IconButton>
+        </Tooltip> */}
               </CardHeader>
             <CardBody>
               <div>
