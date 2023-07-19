@@ -1,5 +1,5 @@
-import { Avatar } from "@chakra-ui/react";
 import Tooltip from '@mui/material/Tooltip';
+import Avatar from '@mui/material/Avatar';
 import { isLastMessage } from "config/ChatLogic";
 import { isSameSenderMargin } from "config/ChatLogic";
 import { isSameUser } from "config/ChatLogic";
@@ -69,6 +69,8 @@ export default function ScrollableMessages({ messages }) {
                         <div className="user-avatar" style={{backgroundColor: `${message.sender._id === uId ? "#BEE3F8" : "#B9F5D0"}`}}>
                           {message.sender.name[0]?.toUpperCase()}
                         </div>
+                        {/* <Avatar src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80" sx={{ width: 40, height: 40 ,marginBottom:"10px"}}/> */}
+
                       </Tooltip>
                     )}
 
@@ -82,9 +84,6 @@ export default function ScrollableMessages({ messages }) {
                           ? "10px 0px 10px 10px"
                           : "0px 10px 10px 10px"
                         }`,
-                        
-
-
                         padding: "5px 5px",
                         maxWidth: "75%",
                         marginLeft: isSameSenderMargin(

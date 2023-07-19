@@ -9,6 +9,7 @@ import { verifyUserOtp } from 'utilities/apiService'
 import { userRegister } from 'utilities/apiService'
 import { userLogin } from 'utilities/apiService'
 import chatbot from '../../../assets/img/Chat bot-amico.png'
+import ImagePicker from 'components/ImagePicker'
 export default function Login() {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
@@ -333,7 +334,7 @@ export default function Login() {
                                             <>
                                                 <CardTitle tag='h1'>REGISTER</CardTitle>
                                                 <CardSubtitle tag='h6' className='mb-2 text-muted'>Create your account</CardSubtitle>
-                                            
+                                                <ImagePicker/>
                                                 <FormGroup>
                                                     
                                                     <Label for='Name'>Name</Label>
