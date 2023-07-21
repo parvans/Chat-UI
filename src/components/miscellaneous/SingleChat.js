@@ -28,7 +28,7 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { m } from "framer-motion";
 //==================================================================>>
 
-const ENDPOINT = "http://192.168.1.41:9000";
+const ENDPOINT = "http://192.168.1.66:9000";
 var socket,selectedChatCompare;
 
 export default function SingleChat({ fetchAgain, setFetchAgain }) {

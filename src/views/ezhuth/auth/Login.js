@@ -14,6 +14,7 @@ export default function Login() {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [selectedImage, setSelectedImage] = useState("");
     const [confirmPassword, setConfirmPassword] = useState('')
     const [otp, setOtp] = useState('')
     // errors
@@ -119,14 +120,15 @@ export default function Login() {
                 const regResponse = await userRegister({
                     name: name,
                     email: email,
-                    password: password
+                    password: password,
+                    data: selectedImage,
                 })
+                console.log(regResponse);
                 if (regResponse.ok) {
                     setTimeout(() => {
                         setLoading(false)
                     }, 1000);
                     if(!loading){
-                    toast.success('Welcome to Ezhuth')
                     setTimeout(() => {
                         setIsRegister(false)
                     }, 1000);
@@ -140,6 +142,9 @@ export default function Login() {
                     }
                 }
             } catch (error) {
+                setTimeout(() => {
+                    setLoading(false)
+                }, 1000);
                 console.log(error);
             }
            
@@ -334,7 +339,10 @@ export default function Login() {
                                             <>
                                                 <CardTitle tag='h1'>REGISTER</CardTitle>
                                                 <CardSubtitle tag='h6' className='mb-2 text-muted'>Create your account</CardSubtitle>
-                                                <ImagePicker/>
+                                                <ImagePicker
+                                                selectedImage={selectedImage}
+                                                setSelectedImage={setSelectedImage}
+                                                />
                                                 <FormGroup>
                                                     
                                                     <Label for='Name'>Name</Label>

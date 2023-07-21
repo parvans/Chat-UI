@@ -2,11 +2,8 @@ import { Avatar, background } from '@chakra-ui/react';
 import { Box } from '@mui/material';
 import React, { useState } from 'react';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
-const ImagePicker = () => {
-  const [selectedImage, setSelectedImage] = useState("https://static.vecteezy.com/system/resources/previews/002/002/403/original/man-with-beard-avatar-character-isolated-icon-free-vector.jpg");
-  const [editedImage,setEditedImage] = useState(null);
+const ImagePicker = ({selectedImage,setSelectedImage}) => {
   const [isHovering, setIsHovering] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
   const handleMouseOver = () => {
     setIsHovering(true);
   };
@@ -14,6 +11,8 @@ const ImagePicker = () => {
   const handleMouseOut = () => {
     setIsHovering(false);
   };
+
+  //file upload ------------------
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
@@ -36,7 +35,7 @@ const ImagePicker = () => {
         fileInput.click();    
     };
 
-    console.log(selectedImage);
+    //console.log(selectedImage);
 
     
   
@@ -47,8 +46,8 @@ const ImagePicker = () => {
         <Avatar src={selectedImage} onMouseOver={handleMouseOver}
           onMouseOut={handleMouseOut}
         sx={{ 
-            width: 200, 
-            height: 200,
+            width: 100, 
+            height: 100,
             marginBottom:"10px",
             cursor:"pointer",
         }}
