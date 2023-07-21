@@ -66,10 +66,10 @@ export default function ScrollableMessages({ messages }) {
                         arrow
                         placement="top-start"
                       >
-                        <div className="user-avatar" style={{backgroundColor: `${message.sender._id === uId ? "#BEE3F8" : "#B9F5D0"}`}}>
+                        {/* <div className="user-avatar" style={{backgroundColor: `${message.sender._id === uId ? "#BEE3F8" : "#B9F5D0"}`}}>
                           {message.sender.name[0]?.toUpperCase()}
-                        </div>
-                        {/* <Avatar src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80" sx={{ width: 40, height: 40 ,marginBottom:"10px"}}/> */}
+                        </div> */}
+                        <Avatar src={message.sender?.image} sx={{ width: 40, height: 40 ,marginBottom:"10px"}}/>
 
                       </Tooltip>
                     )}
