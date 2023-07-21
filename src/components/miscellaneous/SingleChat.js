@@ -25,7 +25,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import message1 from '../../assets/audio/message1.mp3'
 import useSound from 'use-sound';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import { m } from "framer-motion";
 //==================================================================>>
 
 const ENDPOINT = "http://192.168.1.66:9000";
