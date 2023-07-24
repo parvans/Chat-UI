@@ -40,6 +40,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import GroupsIcon from "@mui/icons-material/Groups";
 import Profile from "components/Profile";
 import ChatUserItem from "./ChatUserItem";
+import moment from "moment";
 export default function MyChats({ fetchAgain, setFetchAgain }) {
   const [loggedUser, setLoggedUser] = useState();
   const {
@@ -50,7 +51,10 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
     setChats,
     windowWidth,
     userDetails,
+    isRefresh,
+    setIsRefresh
   } = ChatState();
+
   const userId = jwtDecode(localStorage.getItem("auth-token"));
   const [play] = useSound(message1);
   const [searchMode, setSearchMode] = useState(false);
@@ -97,13 +101,14 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
   useEffect(() => {
     setLoggedUser(userId);
     fetchChat();
-  }, [fetchAgain]);
+  }, [fetchAgain,isRefresh]);
 
   // {/* <GroupChatModal>
   // <Button className="btn btn-success btn-md  mt-1 ml-4 " >
   //   Group Chat <AddIcon mr={2} mb={3} ml={5} />
   //   </Button>
   // </GroupChatModal> */}
+  // console.log(chats)
   return (
     <Col
       style={
@@ -168,25 +173,25 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
-            <MenuItem onClick={handleClose}>
+            {/* <MenuItem onClick={handleClose}>
               <Avatar /> Profile
             </MenuItem>
             <MenuItem onClick={handleClose}>
               <Avatar /> My account
             </MenuItem>
-            <Divider />
+            <Divider /> */}
             <MenuItem onClick={handleClose}>
               <ListItemIcon>
                 <GroupsIcon fontSize="small" />
               </ListItemIcon>
               New group
             </MenuItem>
-            <MenuItem onClick={handleClose}>
+            {/* <MenuItem onClick={handleClose}>
               <ListItemIcon>
                 <Settings fontSize="small" />
               </ListItemIcon>
               Settings
-            </MenuItem>
+            </MenuItem> */}
             <MenuItem onClick={()=>{
               handleLogout()
               handleClose()
@@ -277,31 +282,46 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
               }}
             />
           </Box>
-          <div>
+          <div style={{marginTop:"1rem"}}>
             {chats ? (
               <Stack scrollBehavior={"smooth"}>
                 {chats?.map((item, index) => (
-                  <Box
-                    onClick={() => setSelectedChat(item)}
-                    cursor="pointer"
-                    bg={selectedChat === item ? "#6bd098" : "#E8E8E8"}
-                    color={selectedChat === item ? "#fff" : "#000"}
-                    px={3}
-                    py={2}
-                    borderRadius={10}
-                    key={item?._id}
-                  >
-                    <Text fontSize={17} fontWeight="bold" p={6}>
-                      {!item?.isGroupChat
-                        ? item?.users[0]._id ===
-                          jwtDecode(localStorage.getItem("auth-token")).id
-                          ? item?.users[1]?.name
-                          : item?.users[0]?.name
-                        : item.chatName}
-                    </Text>
-                  </Box>
+                  // <Box
+                  //   onClick={() => setSelectedChat(item)}
+                  //   cursor="pointer"
+                  //   bg={selectedChat === item ? "#6bd098" : "#E8E8E8"}
+                  //   color={selectedChat === item ? "#fff" : "#000"}
+                  //   px={3}
+                  //   py={2}
+                  //   borderRadius={10}
+                  //   key={item?._id}
+                  // >
+                  //   <Text fontSize={17} fontWeight="bold" p={6}>
+                  //     {!item?.isGroupChat
+                  //       ? item?.users[0]._id ===
+                  //         jwtDecode(localStorage.getItem("auth-token")).id
+                  //         ? item?.users[1]?.name
+                  //         : item?.users[0]?.name
+                  //       : item.chatName}
+                  //   </Text>
+                  // </Box>
+                  <ChatUserItem chat={item} key={item?._id} image={
+                    !item?.isGroupChat
+                    ? item?.users[0]._id ===
+                    jwtDecode(localStorage.getItem("auth-token")).id
+                      ? item?.users[1]?.image
+                      : item?.users[0]?.image
+                    : item.image
+                  }
+                  name={!item?.isGroupChat
+                    ? item?.users[0]._id ===
+                    jwtDecode(localStorage.getItem("auth-token")).id
+                      ? item?.users[1]?.name
+                      : item?.users[0]?.name
+                    : item.chatName} 
+                  date={item?.updatedAt} onClick={() => setSelectedChat(item)} />
+
                 ))}
-                <ChatUserItem />
               </Stack>
             ) : (
               <Spinner color="primary" />

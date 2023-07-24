@@ -31,7 +31,7 @@ const ENDPOINT = "http://192.168.1.66:9000";
 var socket,selectedChatCompare;
 
 export default function SingleChat({ fetchAgain, setFetchAgain }) {
-  const {selectedChat, setSelectedChat,notifications,setNotifications} = ChatState();
+  const {selectedChat, setSelectedChat,notifications,setNotifications,isRefresh,setIsRefresh} = ChatState();
   const [messages, setMessages] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -80,11 +80,12 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
         setMessages(res?.data?.data);
         setLoading(false);
         socket.emit('join room', selectedChat?._id);
-        // socket.on('message received',(newMessage) => {
-        //   if(newMessage){
-        //      play();
-        //   }
-        // })
+        socket.on('message received',(newMessage) => {
+          if(newMessage){
+             play();
+             setIsRefresh(!isRefresh);
+          }
+        })
       }
 
     } catch (error) {
@@ -104,6 +105,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
         })
         setLatestMessage("")
         if(res.ok){
+          setIsRefresh(!isRefresh);
           handleMessageSend(res?.data?.data?._id); 
           socket.emit('new message', res?.data?.data);
           setMessages([...messages,res?.data?.data])
@@ -148,11 +150,16 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   
   useEffect(() => {
     socket.on('message received',(newMessage) => {
+      if(newMessage){
+        setIsRefresh(!isRefresh);
+      }
       if(!selectedChatCompare||selectedChatCompare._id!==newMessage.chat._id){
         //notification
         if(!notifications.includes(newMessage)){
-          setNotifications([newMessage,...notifications])
+          setIsRefresh(!isRefresh);
+          setNotifications([newMessage,...notifications]);
           setFetchAgain(!fetchAgain);
+
         }
         handleMessageSend(newMessage?._id);
         setTimeout(() => {
@@ -171,6 +178,8 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
 
 
   });
+
+ //console.log(notifications);
 
   
 

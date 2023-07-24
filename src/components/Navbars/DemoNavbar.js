@@ -255,7 +255,7 @@ function Header(props) {
         <i className="nc-icon nc-zoom-split"></i>
         </Button>
       
-        <Menu>
+        {/* <Menu>
           <MenuButton p={1} bg={"#74cf89"} border={"none"}>
             <NotificationBadge
             count={notifications?.length}
@@ -273,7 +273,7 @@ function Header(props) {
             </div>
           </MenuList>
 
-        </Menu>
+        </Menu> */}
 
           <Nav navbar>
            

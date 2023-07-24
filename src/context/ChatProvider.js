@@ -10,9 +10,10 @@ const ChatProvider = ({ children }) => {
   const [chats,setChats]=useState([])
   const [notifications,setNotifications]=useState([]);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
+  const [isRefresh,setIsRefresh]=useState(false)
   const [userDetails,setUserDetails]=useState()
 
+  //console.log(notifications);
   const fetchUserDetails=async()=>{
     const res=await userProfile()
     if(res?.ok){
@@ -55,7 +56,7 @@ const ChatProvider = ({ children }) => {
   });
 
   return (
-    <ChatContext.Provider value={{ user, setUser,selectedChat,setSelectedChat,chats,setChats,notifications,setNotifications,windowWidth, setWindowWidth,userDetails}}>
+    <ChatContext.Provider value={{ user, setUser,selectedChat,setSelectedChat,chats,setChats,notifications,setNotifications,windowWidth, setWindowWidth,userDetails,isRefresh,setIsRefresh}}>
       {children}
     </ChatContext.Provider>
   );
