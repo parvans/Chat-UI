@@ -41,6 +41,7 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import Profile from "components/Profile";
 import ChatUserItem from "./ChatUserItem";
 import moment from "moment";
+import ScrollableFeed from "react-scrollable-feed";
 export default function MyChats({ fetchAgain, setFetchAgain }) {
   const [loggedUser, setLoggedUser] = useState();
   const {
@@ -52,7 +53,9 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
     windowWidth,
     userDetails,
     isRefresh,
-    setIsRefresh
+    setIsRefresh,
+    notifications,
+    setNotifications
   } = ChatState();
 
   const userId = jwtDecode(localStorage.getItem("auth-token"));
@@ -103,12 +106,6 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
     fetchChat();
   }, [fetchAgain,isRefresh]);
 
-  // {/* <GroupChatModal>
-  // <Button className="btn btn-success btn-md  mt-1 ml-4 " >
-  //   Group Chat <AddIcon mr={2} mb={3} ml={5} />
-  //   </Button>
-  // </GroupChatModal> */}
-  // console.log(chats)
   return (
     <Col
       style={
@@ -168,6 +165,8 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
                   ml: -0.5,
                   mr: 1,
                 },
+                color: "#aebac1",
+                backgroundColor: "#202c33",
               },
             }}
             transformOrigin={{ horizontal: "right", vertical: "top" }}
@@ -182,7 +181,7 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
             <Divider /> */}
             <MenuItem onClick={handleClose}>
               <ListItemIcon>
-                <GroupsIcon fontSize="small" />
+                <GroupsIcon fontSize="small" style={{ color: "#aebac1" }} />
               </ListItemIcon>
               New group
             </MenuItem>
@@ -198,7 +197,7 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
             }
             }>
               <ListItemIcon>
-                <Logout fontSize="small" />
+                <Logout fontSize="small" style={{ color: "#aebac1" }} />
               </ListItemIcon>
               Logout
             </MenuItem>
@@ -282,9 +281,10 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
               }}
             />
           </Box>
-          <div style={{marginTop:"1rem"}}>
+          <div className="scroll-vard" style={{marginTop:"1rem",display:"flex",flexDirection:"column",overflowY:"scroll",scrollbarWidth:"none",overflowX:"hidden",height:"80vh"}}>
             {chats ? (
-              <Stack scrollBehavior={"smooth"}>
+               <Stack scrollBehavior={"smooth"}>
+
                 {chats?.map((item, index) => (
                   // <Box
                   //   onClick={() => setSelectedChat(item)}
@@ -319,10 +319,13 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
                       ? item?.users[1]?.name
                       : item?.users[0]?.name
                     : item.chatName} 
-                  date={item?.updatedAt} onClick={() => setSelectedChat(item)} />
+                  date={item?.updatedAt} onClick={() => {
+                    setSelectedChat(item)
+                    setNotifications(notifications.filter((items)=>items.chat._id!==item._id))
+                  }} />
 
                 ))}
-              </Stack>
+               </Stack>
             ) : (
               <Spinner color="primary" />
             )}

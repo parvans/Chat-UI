@@ -1,27 +1,28 @@
 import { Avatar, Badge, Box, Divider } from "@mui/material";
 import jwtDecode from "jwt-decode";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import DoneIcon from '@mui/icons-material/Done';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { ChatState } from "context/ChatProvider";
 import moment from "moment";
-
-export default function ChatUserItem({ name, image, date, onClick,chat}) {
-  //  console.log(chat);
+import "./styles.css"
+export default function ChatUserItem({ name, image, onClick,chat}) {
   const userId = localStorage.getItem("auth-token");
   const uId = jwtDecode(userId)?.id;
   const {notifications,setNotifications}=ChatState()
-  const [singleNotification,setSingleNotification]=React.useState([])
-
-  // useEffect(()=>{
-  //   const singleNotification=notifications?.filter((item)=>item?.chatId===chat?._id)
-  //   setSingleNotification(singleNotification)
-  //   console.log(singleNotification);
-  // })
+  const [single,setSingle]=useState([])
+  // console.log(notifications);
+  useEffect(()=>{
+    const singleUser=notifications?.filter((item)=>item.chat._id===chat._id)
+    setSingle(singleUser)
+    document.title=`${notifications?.length>0 ? `(${notifications?.length})` : ""} Chatbot`
+  },[notifications])
+  
+  // console.log(single);
   return (
-    <>
-    <Box onClick={onClick} style={{ cursor: "pointer" }}>
+    <div className="chat-user-item">
+    <Box onClick={onClick} style={{ cursor: "pointer" }} className="chat-user-item">
       <div style={{ display: "flex", flexDirection: "row" }}>
         <Avatar src={image} sx={{width: 50,height: 50,borderRadius: "50%",marginRight: "1rem"}} />
         
@@ -64,14 +65,16 @@ export default function ChatUserItem({ name, image, date, onClick,chat}) {
           </div>
         </div>
         <div style={{display: "flex",flexDirection: "column",marginLeft: "auto",marginRight: "1rem",alignItems: "center",justifyContent: "center"}}>
-          <span style={{ fontSize: "0.8rem", color: "#aebac1",whiteSpace: "nowrap"}}>
+          <span style={{ fontSize: "0.8rem", color: `${single?.length>0 ? "#08df08d1" : "#aebac1"}`
+          ,
+          whiteSpace: "nowrap"}}>
             { chat?.latestMessage?.createdAt &&
             moment(chat?.latestMessage?.createdAt).format("hh:mm A")
             }
             </span>
-            { notifications?.length>0 &&
+            { single?.length>0 &&
               <Badge 
-              badgeContent={notifications?.length}
+              badgeContent={single?.length}
               color="success" sx={{marginTop: "1rem",whiteSpace: "nowrap"}}>
             </Badge>}
 
@@ -80,7 +83,7 @@ export default function ChatUserItem({ name, image, date, onClick,chat}) {
         
       </div>
     </Box>
-      <Divider style={{ marginTop: "1rem", backgroundColor: "#aebac1" }} />
-    </>
+      <Divider style={{ marginTop: "1rem", backgroundColor: "rgb(55 55 56)" }} />
+    </div>
   );
 }

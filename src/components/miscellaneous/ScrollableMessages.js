@@ -5,7 +5,7 @@ import { isSameSenderMargin } from "config/ChatLogic";
 import { isSameUser } from "config/ChatLogic";
 import { isSameSender } from "config/ChatLogic";
 import jwtDecode from "jwt-decode";
-import React from "react";
+import React, { useState } from "react";
 import ScrollableFeed from "react-scrollable-feed";
 import moment from "moment";
 import "./styles.css";
@@ -17,6 +17,7 @@ import { useEffect } from "react";
 export default function ScrollableMessages({ messages }) {
   const userId = localStorage.getItem("auth-token");
   const uId = jwtDecode(userId)?.id;
+  const [readMore,setReadMore]=useState(false);
 
   const groupedDays = messages.reduce((groups, message) => {
     //const date = moment(message.createdAt).format('DD/MM/YYYY')
@@ -77,7 +78,7 @@ export default function ScrollableMessages({ messages }) {
                     <span
                       style={{
                         backgroundColor: `${
-                          message.sender._id === uId ? "#BEE3F8" : "#B9F5D0"
+                          message.sender._id === uId ? "#008069" : "rgb(38 48 53)"
                         }`,
                         borderRadius: `${   
                           message.sender._id === uId
@@ -100,15 +101,37 @@ export default function ScrollableMessages({ messages }) {
                         )
                           ? 3
                           : 10,
+                          color: `${message.sender._id === uId ? "white" : "white"}`,
                       }}
                     >
-                      {message.content}
+                      {message.content.length > 50 ? (
+                        <>
+                          {readMore ? (
+                            <>
+                              {message.content}
+                              <span 
+                              onClick={()=>setReadMore(false)}
+                              style={{color:"#2cbae7",cursor:"pointer",fontSize:"0.8rem",marginLeft:"5px"}}>Read Less</span>
+                            </>
+                          ) : (
+                            <>
+                              {message.content.slice(0, 50)}
+                              <span
+                              onClick={()=>setReadMore(true)}
+                              style={{color:"#2cbae7",cursor:"pointer",fontSize:"0.8rem",marginLeft:"5px"}}>Read More</span>
+                            </>
+                          )}
+                        </>
+                      ) : (
+                        message.content
+                      )}
+
                       <br />
                       <div className="time-stamp">
 
                       <small
                         style={{
-                          color: "gray",
+                          color: "rgb(223 205 205)",
                           fontSize: ".6875rem",
                           marginLeft: "5px"
                         }}
@@ -121,13 +144,13 @@ export default function ScrollableMessages({ messages }) {
                         message.sender._id === uId && 
                         <>
                             {/* For message not sent  */}
-                            {message.status==="pending" && <AccessTimeIcon style={{fontSize: ".6879rem", color: "gray", marginLeft: "5px"}}/>  }
+                            {message.status==="pending" && <AccessTimeIcon style={{fontSize: ".6879rem", color: "rgb(223 205 205)", marginLeft: "5px"}}/>  }
 
                             {/* For message send  */}
-                             {message.status==="send" && <DoneIcon style={{fontSize: "15px", color: "gray", marginLeft: "5px"}}/>   }
+                             {message.status==="send" && <DoneIcon style={{fontSize: "15px", color: "rgb(223 205 205)", marginLeft: "5px"}}/>   }
 
                             {/* For message not seen   */}
-                            {message.status==="received" && <DoneAllIcon style={{fontSize: "15px", color: "gray", marginLeft: "5px"}}/>   }
+                            {message.status==="received" && <DoneAllIcon style={{fontSize: "15px", color: "rgb(223 205 205)", marginLeft: "5px"}}/>   }
 
                             {/* For message seen  */}
                             { message.status==="seen" && <DoneAllIcon style={{fontSize: "15px", color: "#2cbae7", marginLeft: "5px"}}/> }

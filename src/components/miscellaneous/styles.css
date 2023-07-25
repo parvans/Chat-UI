@@ -67,3 +67,10 @@ align-items: center;
 justify-content: flex-end;
 margin-top: 5px;
 }
+
+.chat-user-item:hover{
+  background-color: #131f25;
+
+}
+
+

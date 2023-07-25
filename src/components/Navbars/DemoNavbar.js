@@ -234,9 +234,6 @@ function Header(props) {
             </NavbarBrand>
             
         </div>
-          {/* <Badge color="danger" pill style={{ position: "absolute", top: "0px", right: "0px" }} >
-                1000
-              </Badge> */}
         <NavbarToggler onClick={toggles}>
               {
                 notifications?.length > 0 && <Badge color="danger" pill style={{ position: "absolute", top: "2px", right: "7px" }} >
@@ -255,7 +252,7 @@ function Header(props) {
         <i className="nc-icon nc-zoom-split"></i>
         </Button>
       
-        {/* <Menu>
+        <Menu>
           <MenuButton p={1} bg={"#74cf89"} border={"none"}>
             <NotificationBadge
             count={notifications?.length}
@@ -273,7 +270,7 @@ function Header(props) {
             </div>
           </MenuList>
 
-        </Menu> */}
+        </Menu>
 
           <Nav navbar>
            

@@ -1,7 +1,7 @@
 import { FormControl, Text } from "@chakra-ui/react";
 import { ChatState } from "context/ChatProvider";
 import React, { useEffect, useState } from "react";
-import { Button } from "reactstrap";
+import { Badge, Button } from "reactstrap";
 import selcetchat from "../../assets/img/selectchat.png";
 import jwtDecode from "jwt-decode";
 import ProfileModal from "./ProfileModal";
@@ -13,8 +13,9 @@ import ScrollableMessages from "./ScrollableMessages";
 import { io } from "socket.io-client";
 import Lottie from 'react-lottie';
 import typings from '../../../src/animations/typing.json'
-import { IconButton, TextField } from "@material-ui/core";
-import { InputAdornment } from "@mui/material";
+import { IconButton } from "@material-ui/core";
+import TextField from '@mui/material/TextField';
+import { Avatar, InputAdornment } from "@mui/material";
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import SendIcon from '@mui/icons-material/Send';
 import data from '@emoji-mart/data'
@@ -25,6 +26,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import message1 from '../../assets/audio/message1.mp3'
 import useSound from 'use-sound';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
 //==================================================================>>
 
 const ENDPOINT = "http://192.168.1.66:9000";
@@ -222,71 +225,90 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   }
 
   return (
-    <>
+    <div style={{width:"100%",height:"100%"}}>
       {selectedChat ? (
         <>
-        <div style={{display:"flex",flexDirection:"row",alignItems:"center",justifyContent:"space-between"}}>
-        <Button className="btn btn-success btn-round" outline onClick={() => setSelectedChat("")}>
-          <i className="fas fa-arrow-left"/> 
-        </Button>
-        {
-          !selectedChat?.isGroupChat ? (
+        <div style={{display:"flex",flexDirection:"row",alignItems:"center",height:"12vh",color:"white"}}>
+          <ArrowBackIcon  style={{ color: "#d1d7db",cursor:"pointer",marginTop:"3px" }} onClick={() => setSelectedChat("")}/>
+          {/* {
+            !selectedChat?.isGroupChat ? (
 
             <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
             <Text fontSize={28} > 
-              {/* {selectedChat?.users[1]?.name.toUpperCase()} */}
               {
-                selectedChat?.users[0]._id===jwtDecode(localStorage.getItem("auth-token")).id ? selectedChat?.users[1]?.name.toUpperCase():selectedChat?.users[0]?.name.toUpperCase()
+                selectedChat?.users[0]._id===jwtDecode(localStorage.getItem("auth-token")).id ?
+                 selectedChat?.users[1]?.name.toUpperCase():selectedChat?.users[0]?.name.toUpperCase()
               }
             </Text>
             <Text fontSize={12} color="gray.500">
-          {
-            handleOnlineStatus(selectedChat) ? (
-              <div style={{display:"flex",flexDirection:"row",alignItems:"center"}}>
-              <div style={{width:10,height:10,borderRadius:10,backgroundColor:"green",marginRight:5}}/>
-              Online
+            {
+              handleOnlineStatus(selectedChat) ? (
+                <div style={{display:"flex",flexDirection:"row",alignItems:"center"}}>
+                <div style={{width:10,height:10,borderRadius:10,backgroundColor:"green",marginRight:5}}/>
+                Online
+                </div>
+              ) : (
+                <div style={{display:"flex",flexDirection:"row",alignItems:"center"}}>
+                <div style={{width:10,height:10,borderRadius:10,backgroundColor:"red",marginRight:5}}/>
+                Offline
+                </div>
+              )
+            }
+              </Text>
               </div>
+              
+              
             ) : (
-              <div style={{display:"flex",flexDirection:"row",alignItems:"center"}}>
-              <div style={{width:10,height:10,borderRadius:10,backgroundColor:"red",marginRight:5}}/>
-              Offline
-              </div>
-            )
-          }
-            </Text>
-            </div>
-            
-            
-          ) : (
             <Text fontSize={28}>
               {selectedChat?.chatName.toUpperCase()}
             </Text>
-          )
+          )} */}
+          <div style={{display:"flex",flexDirection:"row",alignItems:"center"}}>
+            <Avatar src={
+              selectedChat?.isGroupChat ? (
+                selectedChat?.chatImage
+              ) : (
+                selectedChat?.users[0]._id===jwtDecode(localStorage.getItem("auth-token")).id ?
+                selectedChat?.users[1]?.image:selectedChat?.users[0]?.image
+              )
 
-          
-          
-        }
-        {
-          !selectedChat?.isGroupChat ? (
-            <ProfileModal user={selectedChat?.users[0]._id===jwtDecode(localStorage.getItem("auth-token")).id ? selectedChat?.users[1]:selectedChat?.users[0]}/>
-          ) : (
-            <GroupUpdateModal fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} fetcheMessages={fetcheMessages}/>
-          )
-        }
+              } sx={{width: 50,height: 50,marginRight: "1rem"}} />
+            <div style={{display:"flex",flexDirection:"column"}}>
+            <Text fontSize={20} mt={30}>
+              {
+                selectedChat?.isGroupChat ? (
+                  selectedChat?.chatName.toUpperCase()
+                ) : (
+                  selectedChat?.users[0]._id===jwtDecode(localStorage.getItem("auth-token")).id ?
+                  selectedChat?.users[1]?.name.toUpperCase():selectedChat?.users[0]?.name.toUpperCase()
+                )
+              }
+            <p style={{fontSize:12,color:"gray"}}>
+            {
+              !isTyping? handleOnlineStatus(selectedChat) && "Online" : "typing..."
+            }
+            </p>
+            </Text>
+              </div>
+          </div>
+
+          {/* {
+            !selectedChat?.isGroupChat ? (
+              <ProfileModal user={selectedChat?.users[0]._id===jwtDecode(localStorage.getItem("auth-token")).id ? selectedChat?.users[1]:selectedChat?.users[0]}/>
+            ) : (
+              <GroupUpdateModal fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} fetcheMessages={fetcheMessages}/>
+            )
+          } */}
         </div>
            
         <div style={{
           display:"flex",flexDirection:"column",justifyContent:"flex-end",
-          width:"100%",height:"80vh",overflow:"hidden",
-          padding:10,borderRadius:10,backgroundImage:"url('https://w0.peakpx.com/wallpaper/818/148/HD-wallpaper-whatsapp-background-cool-dark-green-new-theme-whatsapp.jpg')"}}>
+          width:"100%",height:"87vh",overflow:"hidden",
+          padding:10,borderRadius:10,
+          // backgroundImage:"url('https://w0.peakpx.com/wallpaper/818/148/HD-wallpaper-whatsapp-background-cool-dark-green-new-theme-whatsapp.jpg')"
+        }}
+          >
         {
-          // loading ? (
-          //   // <Spinner color="primary"/>
-          //   <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
-          //     <CircularProgress color="inherit" />
-          //   </Backdrop>
-
-          //   ):(
             <>
             <div className="messages">
               {
@@ -298,52 +320,57 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                   <ScrollableMessages messages={messages}/>
                 )
               }
-              </div>
-             {/* )} */}
+            </div>
                   <FormControl onKeyDown={sendMessage} isRequired mt={3}>
-                   
-                    { 
-                      isTyping ? (
-                        <div>
-                          
-                          <Lottie
-                          options={defaultOptions}
-                          width={50}
-                          height={50}
-                          style={{
-                            marginBottom: 15,
-                            marginLeft: 0
-                          }}
-                          />
-                        </div>
-                          
+                    {/* { 
+                      isTyping ? (<div><Lottie options={defaultOptions} width={50} height={50} style={{marginBottom: 15,marginLeft: 0}}/></div>
                       ) : (
                         <></>
                       )
-                    }
+                    } */}
                     <TextField  fullWidth id="outlined-basic" variant="outlined"  placeholder="Type a message..." value={latestMessage} onChange={handleTyping}
-                    style={{
-                      backgroundColor:"#fff",
-                      borderRadius:10,
+                     multiline
+                     maxRows={4}
+                    sx={{
+                      borderRadius: 3,
+                      backgroundColor: "#202c33",
+                      marginBottom: "1rem",
+                      "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#182329",
+                      },
+      
+                      "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                        {
+                          borderColor: "#182329",
+                        },
+      
+                      "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                        {
+                          borderColor: "#182329",
+                        },
+      
+                      "& .MuiOutlinedInput-input": {
+                        color: "#aebac1",
+                      },
                     }}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
-                          <AttachFileIcon/>
+                          {/* <AttachFileIcon style={{color:"#aebac1"}}/> */}
                           <IconButton onClick={() => {
                             // play()
                             setIsEmoji(!isEmoji)}}>
                             {/* <SentimentSatisfiedAltIcon/> */}
                             {
                               isEmoji ? (
-                                <EmojiEmotionsIcon/>
+                                <EmojiEmotionsIcon style={{color:"#aebac1"}} />
                               ):(
-                                <SentimentSatisfiedAltIcon/>
+                                <SentimentSatisfiedAltIcon style={{color:"#aebac1"}}/>
                               )
                             }
                           </IconButton>
                           <IconButton onClick={() => sendMessage({key:"Enter"})}>
-                            <SendIcon/>
+                            <SendIcon style={{color:"#aebac1"}}/>
                           </IconButton>
                         </InputAdornment>
                       ),
@@ -352,7 +379,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                      />
                      {
                         isEmoji &&(
-                          <div style={{position:"absolute",bottom:100,right:10}}>
+                          <div style={{position:"absolute",bottom:300,right:16}}>
                             <Picker 
                             data={data} 
                             onEmojiSelect={onEmojiClick}
@@ -361,21 +388,26 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                           </div>
                         )
                      }
-                    {/* <EmojiPicker /> */}
                     
                  </FormControl>
                  </>
+                 
         }
         </div>
         </>
       ) : (
-        <div className="text-center mt-5">
-            <img src={selcetchat} alt="chat"/>
-          <h3 style={{ color: "grey", marginTop: "5%" }}>
-            Select a chat to start messaging
-          </h3>
+        <div style={{ textAlign: "center", marginTop: "15%" }}>
+            <img src={selcetchat} alt="chat" width={400} height={400} />
+          <h1 style={{ color: "grey"}}>
+            Chatbot <Badge color="dark">Beta</Badge>
+          </h1>
+          <p style={{ color: "grey" }}>
+          Send and receive messages without keeping your phone online.
+          <br />
+          Chat with your friends with ease and convenience.
+          </p>
         </div>
       )}
-    </>
+    </div>
   );
 }
