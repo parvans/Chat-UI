@@ -75,7 +75,7 @@ export default function ScrollableMessages({ messages }) {
                       </Tooltip>
                     )}
 
-                    <span
+                    <div
                       style={{
                         backgroundColor: `${
                           message.sender._id === uId ? "#008069" : "rgb(38 48 53)"
@@ -104,7 +104,8 @@ export default function ScrollableMessages({ messages }) {
                           color: `${message.sender._id === uId ? "white" : "white"}`,
                       }}
                     >
-                      {message.content.length > 50 ? (
+                      <div style={{margin:"4px"}}>
+                      {message.content.length > 1000 ? (
                         <>
                           {readMore ? (
                             <>
@@ -115,7 +116,7 @@ export default function ScrollableMessages({ messages }) {
                             </>
                           ) : (
                             <>
-                              {message.content.slice(0, 50)}
+                              {message.content.slice(0, 1000)}
                               <span
                               onClick={()=>setReadMore(true)}
                               style={{color:"#2cbae7",cursor:"pointer",fontSize:"0.8rem",marginLeft:"5px"}}>Read More</span>
@@ -126,7 +127,8 @@ export default function ScrollableMessages({ messages }) {
                         message.content
                       )}
 
-                      <br />
+                    </div>
+                      {/* <br /> */}
                       <div className="time-stamp">
 
                       <small
@@ -161,7 +163,7 @@ export default function ScrollableMessages({ messages }) {
 
 
                       </div>
-                    </span>
+                    </div>
                   </div>
                 ))}
             </div>

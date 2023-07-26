@@ -1,4 +1,4 @@
-import { Avatar, Badge, Box, Divider } from "@mui/material";
+import { Avatar, Box, Divider } from "@mui/material";
 import jwtDecode from "jwt-decode";
 import React, { useEffect, useState } from "react";
 import DoneIcon from '@mui/icons-material/Done';
@@ -6,13 +6,76 @@ import DoneAllIcon from '@mui/icons-material/DoneAll';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { ChatState } from "context/ChatProvider";
 import moment from "moment";
+import { styled } from '@mui/material/styles';
+import Badge from '@mui/material/Badge';
 import "./styles.css"
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    backgroundColor: '#44b700',
+    color: '#44b700',
+    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+    '&::after': {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      borderRadius: '50%',
+      animation: 'ripple 1.2s infinite ease-in-out',
+      border: '1px solid currentColor',
+      content: '""',
+    },
+  },
+  '@keyframes ripple': {
+    '0%': {
+      transform: 'scale(.8)',
+      opacity: 1,
+    },
+    '100%': {
+      transform: 'scale(2.4)',
+      opacity: 0,
+    },
+  },
+}));
+
+const StyledBadge1 = styled(Badge)(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    backgroundColor: '#00a884',
+    color: 'white',
+    // boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+  //   '&::after': {
+  //     position: 'absolute',
+  //     top: 0,
+  //     left: 0,
+  //     width: '100%',
+  //     height: '100%',
+
+  //     borderRadius: '50%',
+  //     animation: 'ripple 1.2s infinite ease-in-out',
+  //     border: '1px solid currentColor',
+  //     content: '""',
+  //   },
+  // },
+  // '@keyframes ripple': {
+  //   '0%': {
+  //     transform: 'scale(.8)',
+  //     opacity: 1,
+  //   },
+  //   '100%': {
+  //     transform: 'scale(2.4)',
+  //     opacity: 0,
+  //   },
+  },
+}));
+
 export default function ChatUserItem({ name, image, onClick,chat}) {
   const userId = localStorage.getItem("auth-token");
   const uId = jwtDecode(userId)?.id;
   const {notifications,setNotifications}=ChatState()
   const [single,setSingle]=useState([])
-  // console.log(notifications);
+
+  
+
   useEffect(()=>{
     const singleUser=notifications?.filter((item)=>item.chat._id===chat._id)
     setSingle(singleUser)
@@ -24,7 +87,13 @@ export default function ChatUserItem({ name, image, onClick,chat}) {
     <div className="chat-user-item">
     <Box onClick={onClick} style={{ cursor: "pointer" }} className="chat-user-item">
       <div style={{ display: "flex", flexDirection: "row" }}>
+      {/* <StyledBadge
+        overlap="circular"
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        variant="dot"
+      > */}
         <Avatar src={image} sx={{width: 50,height: 50,borderRadius: "50%",marginRight: "1rem"}} />
+      {/* </StyledBadge> */}
         
         <div style={{display: "flex",flexDirection: "column",marginLeft: "1rem",overflow: "hidden",textOverflow: "ellipsis",whiteSpace: "nowrap",width: "100%"}}>
           <span style={{fontSize: "1.2rem",fontWeight: "bold",color: "white",overflow: "hidden",textOverflow: "ellipsis"}}>
@@ -65,7 +134,7 @@ export default function ChatUserItem({ name, image, onClick,chat}) {
           </div>
         </div>
         <div style={{display: "flex",flexDirection: "column",marginLeft: "auto",marginRight: "1rem",alignItems: "center",justifyContent: "center"}}>
-          <span style={{ fontSize: "0.8rem", color: `${single?.length>0 ? "#08df08d1" : "#aebac1"}`
+          <span style={{ fontSize: "0.8rem", color: `${single?.length>0 ? "#00a884" : "#aebac1"}`
           ,
           whiteSpace: "nowrap"}}>
             { chat?.latestMessage?.createdAt &&
@@ -73,10 +142,12 @@ export default function ChatUserItem({ name, image, onClick,chat}) {
             }
             </span>
             { single?.length>0 &&
-              <Badge 
+              <StyledBadge1 
               badgeContent={single?.length}
-              color="success" sx={{marginTop: "1rem",whiteSpace: "nowrap"}}>
-            </Badge>}
+              style={{backgroundColor: "#00a884"}}
+              color="success"
+               sx={{marginTop: "1rem",whiteSpace: "nowrap"}}>
+            </StyledBadge1>}
 
           
         </div>
