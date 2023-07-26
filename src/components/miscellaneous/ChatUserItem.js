@@ -101,34 +101,34 @@ export default function ChatUserItem({ name, image, onClick,chat}) {
           </span>
           <div style={{display: "flex",flexDirection: "row"}}>
             {
-              chat.latestMessage?.sender._id === uId &&(
+              chat?.latestMessage?.sender._id === uId &&(
                 <>
                 {/* For message not sent  */}
-                {chat.latestMessage?.status==="pending" && <AccessTimeIcon style={{fontSize: ".6879rem", color: "gray",marginRight:"0.2rem",marginTop:"1px"}}/>  }
+                {chat?.latestMessage?.status==="pending" && <AccessTimeIcon style={{fontSize: ".6879rem", color: "gray",marginRight:"0.2rem",marginTop:"1px"}}/>  }
 
                 {/* For message send  */}
-                {chat.latestMessage?.status==="send" && <DoneIcon style={{fontSize: "17px", color: "gray",marginRight:"0.2rem",marginTop:"1px"}}/>  }
+                {chat?.latestMessage?.status==="send" && <DoneIcon style={{fontSize: "17px", color: "gray",marginRight:"0.2rem",marginTop:"1px"}}/>  }
 
                 {/* For message not seen   */}
-                {chat.latestMessage?.status==="received" && <DoneAllIcon style={{fontSize: "17px", color: "gray",marginRight:"0.2rem",marginTop:"1px"}}/>   }
+                {chat?.latestMessage?.status==="received" && <DoneAllIcon style={{fontSize: "17px", color: "gray",marginRight:"0.2rem",marginTop:"1px"}}/>   }
 
                 {/* For message seen  */}
-                { chat.latestMessage?.status==="seen" && <DoneAllIcon style={{fontSize: "17px", color: "#2cbae7",marginRight:"0.2rem",marginTop:"1px"}}/> }
+                { chat?.latestMessage?.status==="seen" && <DoneAllIcon style={{fontSize: "17px", color: "#2cbae7",marginRight:"0.2rem",marginTop:"1px"}}/> }
                 </>
               )
             }
           {
-            chat.isGroupChat &&(
+            chat?.isGroupChat &&(
               <span style={{ fontSize: "0.8rem", color: "#aebac1",marginRight:"1rem" }}>
                 {
-                  chat.latestMessage?.sender._id === uId ? "You: " : chat.latestMessage?.sender.name + ": "
+                  chat?.latestMessage?.sender._id === uId ? "You: " : chat?.latestMessage?.sender?.name + ": "
                 }
               </span>
             )
             }
           <span style={{ fontSize: "0.8rem", color: "#aebac1" }}>
             {
-              chat.latestMessage?.content
+              chat?.latestMessage?.content
             }
           </span>
           </div>

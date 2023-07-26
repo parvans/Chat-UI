@@ -110,7 +110,9 @@ const handleClick = () => {
         </Avatar>
 
     </Box>       
-      <div style={{display: "flex",flexDirection: "column",backgroundColor: "#202c33",marginTop: "1rem",padding: "1rem",borderRadius: "10px", }}>
+      <div style={{display: "flex",flexDirection: "column"
+      //,backgroundColor: "#202c33"
+      ,marginTop: "1rem",padding: "1rem",borderRadius: "10px", }}>
         <label style={{color: "#aebac1",fontSize: "1.2rem",fontWeight: "bold",}}>Name</label>
         <div style={{display: "flex",justifyContent: "space-between"}}>
             {nameEdit ?(

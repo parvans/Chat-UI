@@ -42,6 +42,9 @@ import Profile from "components/Profile";
 import ChatUserItem from "./ChatUserItem";
 import moment from "moment";
 import ScrollableFeed from "react-scrollable-feed";
+import { getUsers } from "utilities/apiService";
+import { accessChat } from "utilities/apiService";
+import Group from "components/Group";
 export default function MyChats({ fetchAgain, setFetchAgain }) {
   const [loggedUser, setLoggedUser] = useState();
   const {
@@ -55,14 +58,17 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
     isRefresh,
     setIsRefresh,
     notifications,
-    setNotifications
+    setNotifications,
   } = ChatState();
 
   const userId = jwtDecode(localStorage.getItem("auth-token"));
   const [play] = useSound(message1);
   const [searchMode, setSearchMode] = useState(false);
   const [profileMode, setProfileMode] = useState(false);
-  const [search, setSearch] = useState("");
+  const [newGroup, setNewGroup] = useState(false);
+  const [searchResult, setSearchResult] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [noData, setNoData] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
@@ -72,16 +78,6 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
   };
   const handleClose = () => {
     setAnchorEl(null);
-  };
-
-  const handleSearch = (e) => {
-    setSearch(e.target.value);
-    setSearchMode(true);
-  };
-
-  const clearSearch = () => {
-    setSearch("");
-    setSearchMode(false);
   };
 
   const fetchChat = async () => {
@@ -96,241 +92,366 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
   };
 
   const handleLogout = () => {
-    localStorage.clear('ezuth-token')
-    window.location.href = '/auth/login'
-  }
+    localStorage.clear("ezuth-token");
+    window.location.href = "/auth/login";
+  };
 
+  const handleSearch = async (value) => {
+    // e.preventDefault()
+    // if(!search){
+    //   toast.error("please enter something to search")
+    // }else{
+    try {
+      setLoading(true);
+      const res = await getUsers(value);
+      if (res?.ok) {
+        setSearchResult(res?.data?.data);
+      }
+      if (res?.data?.data?.length === 0) {
+        setNoData(true);
+      } else {
+        setNoData(false);
+      }
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+
+  const accessUserChat = async (id) => {
+    // console.log(id);
+    try {
+      // setLoadingChat(true)
+      const chatRes = await accessChat(id);
+      // console.log(chats);
+      if (chatRes?.ok) {
+        if (!chats?.find((item) => item?._id === chatRes?.data?.data?._id))
+          setChats([chatRes?.data?.data, ...chats]);
+        setSelectedChat(chatRes?.data?.data);
+        // setLoadingChat(false)
+        // onClose()
+        setSearchMode(false);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   useEffect(() => {
     setLoggedUser(userId);
     fetchChat();
-  }, [fetchAgain,isRefresh]);
+  }, [fetchAgain, isRefresh]);
+
+    //console.log(newGroup);
 
   return (
     <Col
       style={
         windowWidth <= 993
           ? selectedChat
-            ? { display: "none" }
-            : { display: "block" }
-          : { display: "block" }
+            ? { display: "none"}
+            : { display: "block"}
+          : { display: "block"}
+        
       }
       md={windowWidth <= 993 ? "12" : "4"}
     >
       <Card className="card-user" id="mychat">
         <CardHeader style={{ backgroundColor: "#202c33" }}>
-          { !profileMode ? (
+          
+          {
+            newGroup ? (
+              (
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  <ArrowBackIcon
+                    style={{
+                      color: "#d1d7db",
+                      cursor: "pointer",
+                      marginTop: "4px",
+                    }}
+                    onClick={() => setNewGroup(!newGroup)}
+                  />
+                  <Text
+                    fontSize={20}
+                    fontWeight="bold"
+                    color={"#d1d7db"}
+                    ml={"2rem"}
+                    fontFamily={"sans-serif"}
+                  >
+                    Add group participants
+                  </Text>
+                </div>
+              )
+            )
+            :
+          
+          !profileMode ? (
             <>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Avatar
-              src={userDetails?.image}
-              sx={{
-                width: 40,
-                height: 40,
-                marginBottom: "10px",
-                cursor: "pointer",
-              }}
-              onClick={() => setProfileMode(!profileMode)}
-            />
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <Avatar
+                  src={userDetails?.image}
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    marginBottom: "10px",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setProfileMode(!profileMode)}
+                />
 
-            <Tooltip title="Account settings">
-              <IconButton
-                onClick={handleClick}
-                size="small"
-                sx={{ ml: 2, marginBottom: "10px" }}
-                aria-controls={open ? "account-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
+                <Tooltip title="Account settings">
+                  <IconButton
+                    onClick={handleClick}
+                    size="small"
+                    sx={{ ml: 2, marginBottom: "10px" }}
+                    aria-controls={open ? "account-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                  >
+                    <MoreVertIcon style={{ color: "#aebac1" }} />
+                  </IconButton>
+                </Tooltip>
+              </div>
+
+              <Menu
+                anchorEl={anchorEl}
+                id="account-menu"
+                open={open}
+                onClose={handleClose}
+                //onClick={handleClose}
+                PaperProps={{
+                  elevation: 0,
+                  sx: {
+                    overflow: "visible",
+                    filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                    mt: 1.5,
+                    "& .MuiAvatar-root": {
+                      width: 32,
+                      height: 32,
+                      ml: -0.5,
+                      mr: 1,
+                    },
+                    color: "#aebac1",
+                    backgroundColor: "#202c33",
+                  },
+                }}
+                transformOrigin={{ horizontal: "right", vertical: "top" }}
+                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
               >
-                <MoreVertIcon style={{ color: "#aebac1" }} />
-              </IconButton>
-            </Tooltip>
-          </div>
-
-          <Menu
-            anchorEl={anchorEl}
-            id="account-menu"
-            open={open}
-            onClose={handleClose}
-            onClick={handleClose}
-            PaperProps={{
-              elevation: 0,
-              sx: {
-                overflow: "visible",
-                filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                mt: 1.5,
-                "& .MuiAvatar-root": {
-                  width: 32,
-                  height: 32,
-                  ml: -0.5,
-                  mr: 1,
-                },
-                color: "#aebac1",
-                backgroundColor: "#202c33",
-              },
-            }}
-            transformOrigin={{ horizontal: "right", vertical: "top" }}
-            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-          >
-            {/* <MenuItem onClick={handleClose}>
-              <Avatar /> Profile
-            </MenuItem>
-            <MenuItem onClick={handleClose}>
-              <Avatar /> My account
-            </MenuItem>
-            <Divider /> */}
-            <MenuItem onClick={handleClose}>
-              <ListItemIcon>
-                <GroupsIcon fontSize="small" style={{ color: "#aebac1" }} />
-              </ListItemIcon>
-              New group
-            </MenuItem>
-            {/* <MenuItem onClick={handleClose}>
-              <ListItemIcon>
-                <Settings fontSize="small" />
-              </ListItemIcon>
-              Settings
-            </MenuItem> */}
-            <MenuItem onClick={()=>{
-              handleLogout()
-              handleClose()
-            }
-            }>
-              <ListItemIcon>
-                <Logout fontSize="small" style={{ color: "#aebac1" }} />
-              </ListItemIcon>
-              Logout
-            </MenuItem>
-          </Menu>
-          </>
-          ) : (
+                
+                <MenuItem onClick={()=>{
+                   handleClose()
+                  setNewGroup(!newGroup)
+                  }}>
+                  <ListItemIcon>
+                    <GroupsIcon fontSize="small" style={{ color: "#aebac1" }} />
+                  </ListItemIcon>
+                  New group
+                </MenuItem>
+                
+                <MenuItem
+                  onClick={() => {
+                    handleLogout();
+                    handleClose();
+                  }}
+                >
+                  <ListItemIcon>
+                    <Logout fontSize="small" style={{ color: "#aebac1" }} />
+                  </ListItemIcon>
+                  Logout
+                </MenuItem>
+              </Menu>
+            </>
+          ) : 
+          (
             <div style={{ display: "flex", flexDirection: "row" }}>
-            <ArrowBackIcon  style={{ color: "#d1d7db",cursor:"pointer",marginTop:"4px" }} onClick={() => setProfileMode(!profileMode)} />
-            <Text fontSize={20} fontWeight="bold" color={"#d1d7db"} ml={"2rem"} fontFamily={"sans-serif"}>
-              Profile
-            </Text>
-          </div>
-          )}
+              <ArrowBackIcon
+                style={{
+                  color: "#d1d7db",
+                  cursor: "pointer",
+                  marginTop: "4px",
+                }}
+                onClick={() => setProfileMode(!profileMode)}
+              />
+              <Text
+                fontSize={20}
+                fontWeight="bold"
+                color={"#d1d7db"}
+                ml={"2rem"}
+                fontFamily={"sans-serif"}
+              >
+                Profile
+              </Text>
+            </div>
+          )
+        }
         </CardHeader>
-        <CardBody>{profileMode ? 
-        <Profile />
-        : 
-        <>
-          <Box mb={3} mt={2}>
-            <TextField
-              id="outlined-size-small"
-              size="small"
-              variant="outlined"
-              placeholder="Search or start a new chat"
-              fullWidth
-              onChange={handleSearch}
-              value={search}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
+        <CardBody>
+          {
+            newGroup ? (
+              <Group/>
+            ):
+          profileMode ? (
+            <Profile />
+          ) : (
+            <>
+              <Box mb={3} mt={2}>
+                <TextField
+                  id="outlined-size-small"
+                  size="small"
+                  variant="outlined"
+                  placeholder="Search or start a new chat"
+                  fullWidth
+                  onChange={(e) => {
+                    handleSearch(e.target.value);
+                    setSearchMode(true);
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        {searchMode ? (
+                          <ArrowBackIcon
+                            onClick={() => {
+                              setSearchMode(!searchMode);
+                            }}
+                            style={{ color: "#6bd098", cursor: "pointer" }}
+                          />
+                        ) : (
+                          <SearchIcon
+                            onClick={() => setSearchMode(true)}
+                            style={{ color: "#aebac1", cursor: "pointer" }}
+                          />
+                        )}
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        {searchMode ? (
+                          <CloseIcon
+                            // onClick={(e) => clearSearch(e)}
+                            style={{ color: "#aebac1", cursor: "pointer" }}
+                          />
+                        ) : (
+                          <></>
+                        )}
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{
+                    borderRadius: 3,
+                    backgroundColor: "#202c33",
+                    marginBottom: "1rem",
+                    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                      {
+                        borderColor: "#111b21",
+                      },
+
+                    "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                      {
+                        borderColor: "#111b21",
+                      },
+
+                    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                      {
+                        borderColor: "#111b21",
+                      },
+
+                    "& .MuiOutlinedInput-input": {
+                      color: "#aebac1",
+                    },
+                  }}
+                />
+              </Box>
+              <div className="scroll-vard"
+                style={{
+                  marginTop: "1rem",
+                  display: "flex",
+                  flexDirection: "column",
+                  overflowY: "scroll",
+                  scrollbarWidth: "none",
+                  overflowX: "hidden",
+                  height: "80vh",
+                }}
+              >
+                {chats ? (
+                  <Stack scrollBehavior={"smooth"}>
                     {searchMode ? (
-                      <ArrowBackIcon
-                        onClick={() => {
-                          setSearchMode(!searchMode);
-                          setSearch("");
-                        }}
-                        style={{ color: "#6bd098", cursor: "pointer" }}
-                      />
+                      <>
+                        {loading ? (
+                          <Spinner color="primary" />
+                        ) : (
+                          <>
+                            {noData ? (
+                              <Text
+                                fontSize={20}
+                                fontWeight="bold"
+                                color={"#d1d7db"}
+                                ml={"2rem"}
+                                fontFamily={"sans-serif"}
+                              >
+                                No data found
+                              </Text>
+                            ) : (
+                              <>
+                                {searchResult?.map((item, index) => (
+                                  <ChatUserItem
+                                    chat={item}
+                                    key={item?._id}
+                                    image={item?.image}
+                                    name={item?.name}
+                                    onClick={() => accessUserChat(item?._id)}
+                                  />
+                                ))}
+                              </>
+                            )}
+                          </>
+                        )}
+                      </>
                     ) : (
-                      <SearchIcon
-                        onClick={() => setSearchMode(true)}
-                        style={{ color: "#aebac1", cursor: "pointer" }}
-                      />
+                      <>
+                        {chats?.map((item, index) => (
+                          <ChatUserItem
+                            chat={item}
+                            key={item?._id}
+                            image={
+                              !item?.isGroupChat
+                                ? item?.users[0]._id ===
+                                  jwtDecode(localStorage.getItem("auth-token"))
+                                    .id
+                                  ? item?.users[1]?.image
+                                  : item?.users[0]?.image
+                                : item.image
+                            }
+                            name={
+                              !item?.isGroupChat
+                                ? item?.users[0]._id ===
+                                  jwtDecode(localStorage.getItem("auth-token"))
+                                    .id
+                                  ? item?.users[1]?.name
+                                  : item?.users[0]?.name
+                                : item.chatName
+                            }
+                            date={item?.updatedAt}
+                            onClick={() => {
+                              setSelectedChat(item);
+                              setNotifications(
+                                notifications.filter(
+                                  (items) => items.chat._id !== item._id
+                                )
+                              );
+                            }}
+                          />
+                        ))}
+                      </>
                     )}
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    {search ? (
-                      <CloseIcon
-                        onClick={clearSearch}
-                        style={{ color: "#aebac1", cursor: "pointer" }}
-                      />
-                    ) : (
-                      <></>
-                    )}
-                  </InputAdornment>
-                ),
-              }}
-              sx={{
-                borderRadius: 3,
-                backgroundColor: "#202c33",
-                marginBottom: "1rem",
-                "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#111b21",
-                },
-
-                "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
-                  {
-                    borderColor: "#111b21",
-                  },
-
-                "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                  {
-                    borderColor: "#111b21",
-                  },
-
-                "& .MuiOutlinedInput-input": {
-                  color: "#aebac1",
-                },
-              }}
-            />
-          </Box>
-          <div className="scroll-vard" style={{marginTop:"1rem",display:"flex",flexDirection:"column",overflowY:"scroll",scrollbarWidth:"none",overflowX:"hidden",height:"80vh"}}>
-            {chats ? (
-               <Stack scrollBehavior={"smooth"}>
-
-                {chats?.map((item, index) => (
-                  // <Box
-                  //   onClick={() => setSelectedChat(item)}
-                  //   cursor="pointer"
-                  //   bg={selectedChat === item ? "#6bd098" : "#E8E8E8"}
-                  //   color={selectedChat === item ? "#fff" : "#000"}
-                  //   px={3}
-                  //   py={2}
-                  //   borderRadius={10}
-                  //   key={item?._id}
-                  // >
-                  //   <Text fontSize={17} fontWeight="bold" p={6}>
-                  //     {!item?.isGroupChat
-                  //       ? item?.users[0]._id ===
-                  //         jwtDecode(localStorage.getItem("auth-token")).id
-                  //         ? item?.users[1]?.name
-                  //         : item?.users[0]?.name
-                  //       : item.chatName}
-                  //   </Text>
-                  // </Box>
-                  <ChatUserItem chat={item} key={item?._id} image={
-                    !item?.isGroupChat
-                    ? item?.users[0]._id ===
-                    jwtDecode(localStorage.getItem("auth-token")).id
-                      ? item?.users[1]?.image
-                      : item?.users[0]?.image
-                    : item.image
-                  }
-                  name={!item?.isGroupChat
-                    ? item?.users[0]._id ===
-                    jwtDecode(localStorage.getItem("auth-token")).id
-                      ? item?.users[1]?.name
-                      : item?.users[0]?.name
-                    : item.chatName} 
-                  date={item?.updatedAt} onClick={() => {
-                    setSelectedChat(item)
-                    setNotifications(notifications.filter((items)=>items.chat._id!==item._id))
-                  }} />
-
-                ))}
-               </Stack>
-            ) : (
-              <Spinner color="primary" />
-            )}
-          </div>
-        </>}
+                  </Stack>
+                ) : (
+                  <Spinner color="primary" />
+                )}
+              </div>
+            </>
+          )}
         </CardBody>
       </Card>
     </Col>
