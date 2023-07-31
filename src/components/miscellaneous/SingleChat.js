@@ -98,7 +98,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
 
 
   const sendMessage = async (event) => {
-    if(event.key === "Enter" && latestMessage){
+    // if(event.key === "Enter" && latestMessage){
       socket.emit('stop typing', selectedChat?._id);
       
       try {
@@ -117,7 +117,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
       } catch (error) {
         console.log(error);
       }
-    }
+    // }
   };
 
 
@@ -321,7 +321,9 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                 )
               }
             </div>
-                  <FormControl onKeyDown={sendMessage} isRequired mt={3}>
+                  <FormControl 
+                 // onKeyDown={sendMessage} 
+                  isRequired mt={3}>
                     {/* { 
                       isTyping ? (<div><Lottie options={defaultOptions} width={50} height={50} style={{marginBottom: 15,marginLeft: 0}}/></div>
                       ) : (
@@ -369,9 +371,13 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                               )
                             }
                           </IconButton>
-                          <IconButton onClick={() => sendMessage({key:"Enter"})}>
+                          {
+                            latestMessage?.length>0 && (
+                            <IconButton onClick={() => sendMessage()}>
                             <SendIcon style={{color:"#aebac1"}}/>
                           </IconButton>
+                            )
+                          }
                         </InputAdornment>
                       ),
                     }}

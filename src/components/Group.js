@@ -1,4 +1,4 @@
-import { Avatar, Box, Chip, IconButton, TextField } from "@mui/material";
+import { Avatar, Box, Chip, IconButton, TextField,Autocomplete } from "@mui/material";
 import React from "react";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useState } from "react";
@@ -7,6 +7,24 @@ import { useEffect } from "react";
 import { Stack } from "@chakra-ui/react";
 import ChatUserItem from "./miscellaneous/ChatUserItem";
 import "./miscellaneous/styles.css";
+import ChipInput from 'material-ui-chip-input';
+import { styled } from '@mui/material/styles';
+import Confetti from 'react-confetti'
+const StyledChipInput = styled(ChipInput)(({ theme }) => ({
+    '& .MuiChip-root': {  
+        backgroundColor: '#00a884',
+        color: 'white',
+        margin: '2px',
+        height: '30px',
+        borderRadius: '20px',
+        fontSize: '12px',
+        fontWeight: 'bold',
+        '& .MuiChip-deleteIcon': {
+            color: 'white',
+        },
+    },
+  }));
+
 export default function Group() {
     const [users, setUsers] = useState([]);
     const [selectUser, setSelectUser] = useState([]);
@@ -35,7 +53,7 @@ export default function Group() {
                   // since data at this point is an object, to get array of values
                   // we use Object.values method
                   let result = Object.values(data)
-                    setUsers(result)
+                     setUsers(result)
             }
         } catch (error) {
             console.log(error);
@@ -46,9 +64,22 @@ export default function Group() {
         getTheUsers()
     }, [])
 
-     //console.log(selectUser);
+    // useEffect(() => {
+
+    //   users?.map((item, index) => (
+    //     item.children.map((userss, index) => {
+    //       selectUser.map((itemss, index) => {
+    //         if (itemss.name === userss.name) {
+    //         console.log(itemss);
+    //         }
+    //       })          
+    //     })
+    //   ))
+    // })
+
   return (
     <Box mb={3} mt={2}>
+      
       <Box
         sx={{
           display: "flex",
@@ -58,26 +89,66 @@ export default function Group() {
           width: "100%",
         }}
       >
-        <TextField id="outlined-basic" label="Search" variant="outlined" />
-        {
-            selectUser.length > 0 &&
-            <Stack direction="row" spacing={1}>
-            {selectUser?.map((item, index) => (
-                <Chip
-                avatar={<Avatar alt="Natacha" src={item.image} />}
-                label={item.name}
-                variant="outlined"
-                 onDelete={()=>console.log("hii")}
-              />
-            ))}
-        </Stack>   }     
+            <StyledChipInput
+            className="scroll-vard" 
+              fullWidth
+              variant="outlined"
+              sx={{
+                borderRadius: 3,
+                backgroundColor: "#202c33",
+                 overflowY: `${
+                    selectUser.length > 0 ? "scroll" : "hidden"
+                  }`,
+                 
+                maxHeight: "11vh",
+                
+                "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                      {
+                        borderColor: "#111b21",
+                      },
+
+                    "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                      {
+                        borderColor: "#111b21",
+                      },
+
+                    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                      {
+                        borderColor: "#111b21",
+                      },
+
+                    "& .MuiOutlinedInput-input": {
+                      color: "#aebac1",
+                                            
+                    },
+              }}
+              placeholder="Search"
+              value={selectUser.map((user) => user.name)}
+              onAdd={(chip) => {
+                setSelectUser([...selectUser, chip]);
+              }}
+              onDelete={(chip, index) => {
+                const filteredItems = selectUser.filter(
+                  (user) => user.name !== chip
+                );
+                setSelectUser(filteredItems);
+              }}
+              // onChange={(chips) => {
+              //   setSelectUser(chips);
+              // }}
+
+              
+            />
+
+                     
       </Box>
       <Box className="scroll-vard" sx={{ display: 'flex', flexDirection: 'column',overflowY: "scroll",
                   scrollbarWidth: "none",
                   overflowX: "hidden",
                   height: `${
                     selectUser.length > 0 ? "70vh" : "80vh"
-                  }`
+                  }`,
+                  marginTop:"10px",
                 }}>
         {users?.map((item, index) => (
             <Stack scrollBehavior={"smooth"}>
@@ -97,7 +168,7 @@ export default function Group() {
         ))}
         </Box>
         { selectUser.length > 0 &&
-      <Box
+        <Box
       
           sx={{
             display: "flex",
@@ -105,14 +176,16 @@ export default function Group() {
             width: "100%",
             alignItems: "center",
             justifyContent: "center",
-          }}
-        //   mt={80}
-        >
-                <IconButton aria-label="delete" sx={{color:"white",backgroundColor:"#00a884",alighItems:"center",justifyContent:"center",borderRadius:"50%",width:"50px",height:"50px"}}>
-                <ArrowForwardIcon />
-            </IconButton>
+          }}>
+          {/* <Confetti 
+          style={{position:"absolute",top:"60px",width:"100%",height:"100%"}}
+          /> */}
+
+          <IconButton aria-label="delete" style={{backgroundColor:"#008069",color:"white",width:"50px",height:"50px",borderRadius:"50%",marginTop:"10px"}}>
+            <ArrowForwardIcon />
+          </IconButton>
         </Box>
-            } 
+        } 
     </Box>
   );
 }

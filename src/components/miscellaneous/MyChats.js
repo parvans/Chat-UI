@@ -45,6 +45,8 @@ import ScrollableFeed from "react-scrollable-feed";
 import { getUsers } from "utilities/apiService";
 import { accessChat } from "utilities/apiService";
 import Group from "components/Group";
+import Confetti from 'react-confetti'
+
 export default function MyChats({ fetchAgain, setFetchAgain }) {
   const [loggedUser, setLoggedUser] = useState();
   const {
@@ -213,13 +215,13 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
                   </IconButton>
                 </Tooltip>
               </div>
-
-              <Menu
+              
+              <Menu 
                 anchorEl={anchorEl}
                 id="account-menu"
                 open={open}
                 onClose={handleClose}
-                //onClick={handleClose}
+                onClick={handleClose}
                 PaperProps={{
                   elevation: 0,
                   sx: {
@@ -238,6 +240,7 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
                 }}
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+
               >
                 
                 <MenuItem onClick={()=>{
@@ -287,16 +290,22 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
           )
         }
         </CardHeader>
+        
         <CardBody>
+          
           {
             newGroup ? (
+              <>
               <Group/>
+              </>
+
             ):
           profileMode ? (
             <Profile />
           ) : (
             <>
               <Box mb={3} mt={2}>
+                
                 <TextField
                   id="outlined-size-small"
                   size="small"

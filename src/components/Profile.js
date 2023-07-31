@@ -11,6 +11,7 @@ import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import ImagePicker from "./ImagePicker";
+import CropEasy from "./crop/CropEasy";
 
 export default function Profile() {
   const { userDetails } = ChatState();
@@ -19,7 +20,7 @@ export default function Profile() {
   const [name, setName] =useState(userDetails?.name);
   const [image, setImage] =useState(userDetails?.image);
   const [isHovering, setIsHovering] = useState(false);
-
+  const [openCrop, setOpenCrop] = useState(false);  
   const handleMouseOver = () => {
     setIsHovering(true);
   };
@@ -72,8 +73,10 @@ const handleClick = () => {
     <Box mb={3} mt={2}>
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
         
-        <Avatar src={image} onMouseOver={handleMouseOver}
-          onMouseOut={handleMouseOut}
+        <Avatar src={image} 
+        // onMouseOver={handleMouseOver}
+        //   onMouseOut={handleMouseOut}
+        onClick={() => setOpenCrop(!openCrop)}
         sx={{ 
             width: 150, 
             height: 150,
@@ -82,7 +85,7 @@ const handleClick = () => {
             borderRadius:"50%",
         }}
         >
-            {
+            {/* {
                 isHovering && (
                     <Box
                         sx={{
@@ -106,9 +109,18 @@ const handleClick = () => {
                     </Box>
                 )
 
-            }
+            } */}
         </Avatar>
-
+        {
+            openCrop&&(
+                <CropEasy
+                photoURL={image}
+                setOpenCrop={setOpenCrop}
+                setPhotoURL={setImage}
+                setFile={setImage}
+                />
+            )
+        }
     </Box>       
       <div style={{display: "flex",flexDirection: "column"
       //,backgroundColor: "#202c33"

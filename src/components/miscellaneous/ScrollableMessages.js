@@ -14,10 +14,19 @@ import DoneAllIcon from '@mui/icons-material/DoneAll';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { Spinner } from "reactstrap";
 import { useEffect } from "react";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 export default function ScrollableMessages({ messages }) {
   const userId = localStorage.getItem("auth-token");
   const uId = jwtDecode(userId)?.id;
   const [readMore,setReadMore]=useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+  const handleMouseOver = () => {
+    setIsHovering(true);
+  };
+
+  const handleMouseOut = () => {
+    setIsHovering(false);
+  };
 
   const groupedDays = messages.reduce((groups, message) => {
     //const date = moment(message.createdAt).format('DD/MM/YYYY')
@@ -46,6 +55,9 @@ export default function ScrollableMessages({ messages }) {
     };
   });
   //  console.log(groupArrays);
+
+
+      
 
   return (
     <ScrollableFeed className="scroll-vard">
@@ -104,7 +116,11 @@ export default function ScrollableMessages({ messages }) {
                           color: `${message.sender._id === uId ? "white" : "white"}`,
                       }}
                     >
-                      <div style={{margin:"4px"}}>
+                      <div style={{margin:"4px",display:"flex",justifyContent:"space-between",alignItems:"center"}}
+                        onMouseOver={handleMouseOver}
+                        onMouseOut={handleMouseOut}
+                      >
+                        
                       {message.content.length > 1000 ? (
                         <>
                           {readMore ? (
@@ -126,7 +142,15 @@ export default function ScrollableMessages({ messages }) {
                       ) : (
                         message.content
                       )}
+                      {
+                          isHovering && message.sender._id === uId 
+                          && (
+                            <div style={{display:"flex",justifyContent:"flex-end",alignItems:"center"}}>
 
+                            <KeyboardArrowDownIcon style={{fontSize:"1.5rem",color:"white",cursor:"pointer",justifyContent:"flex-end"}}/>
+                            </div>
+                          )
+                        }
                     </div>
                       {/* <br /> */}
                       <div className="time-stamp">
