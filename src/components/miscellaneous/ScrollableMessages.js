@@ -15,11 +15,15 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { Spinner } from "reactstrap";
 import { useEffect } from "react";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { Button, IconButton } from '@mui/material';
+import { useRef } from 'react';
+
 export default function ScrollableMessages({ messages }) {
   const userId = localStorage.getItem("auth-token");
   const uId = jwtDecode(userId)?.id;
   const [readMore,setReadMore]=useState(false);
   const [isHovering, setIsHovering] = useState(false);
+  const [scrollup, setScrollup] = useState(false);
   const handleMouseOver = () => {
     setIsHovering(true);
   };
@@ -56,8 +60,8 @@ export default function ScrollableMessages({ messages }) {
   });
   //  console.log(groupArrays);
 
-
-      
+const ref = useRef(null);
+  const doClick = () => ref.current?.scrollIntoView({behavior: 'smooth'})
 
   return (
     <ScrollableFeed className="scroll-vard">
@@ -88,6 +92,7 @@ export default function ScrollableMessages({ messages }) {
                     )}
 
                     <div
+                    
                       style={{
                         backgroundColor: `${
                           message.sender._id === uId ? "#008069" : "rgb(38 48 53)"
@@ -98,6 +103,7 @@ export default function ScrollableMessages({ messages }) {
                           : "0px 10px 10px 10px"
                         }`,
                         padding: "5px 5px",
+                        fontSize:"17px",
                         maxWidth: "75%",
                         marginLeft: isSameSenderMargin(
                           group.messages,
@@ -105,6 +111,7 @@ export default function ScrollableMessages({ messages }) {
                           index,
                           uId
                         ),
+                        marginRight:`${message.sender._id === uId ? "70px" : "0px"}`,
                         marginTop: isSameUser(
                           group.messages,
                           message,
@@ -114,12 +121,13 @@ export default function ScrollableMessages({ messages }) {
                           ? 3
                           : 10,
                           color: `${message.sender._id === uId ? "white" : "white"}`,
+                          
                       }}
                     >
-                      <div style={{margin:"4px",display:"flex",justifyContent:"space-between",alignItems:"center"}}
+                      {/* <div style={{margin:"4px",display:"flex",justifyContent:"space-between",alignItems:"center"}}
                         onMouseOver={handleMouseOver}
                         onMouseOut={handleMouseOut}
-                      >
+                      > */}
                         
                       {message.content.length > 1000 ? (
                         <>
@@ -142,7 +150,7 @@ export default function ScrollableMessages({ messages }) {
                       ) : (
                         message.content
                       )}
-                      {
+                      {/* {
                           isHovering && message.sender._id === uId 
                           && (
                             <div style={{display:"flex",justifyContent:"flex-end",alignItems:"center"}}>
@@ -150,8 +158,8 @@ export default function ScrollableMessages({ messages }) {
                             <KeyboardArrowDownIcon style={{fontSize:"1.5rem",color:"white",cursor:"pointer",justifyContent:"flex-end"}}/>
                             </div>
                           )
-                        }
-                    </div>
+                        } */}
+                    {/* </div> */}
                       {/* <br /> */}
                       <div className="time-stamp">
 
@@ -193,6 +201,23 @@ export default function ScrollableMessages({ messages }) {
             </div>
           </div>
         ))}
+        { setScrollup &&
+          <IconButton 
+        style={{
+          backgroundColor:"#202c33",
+          color:"white",width:"50px",
+          height:"50px",borderRadius:"50%",
+          marginTop:"10px", marginLeft:"auto",
+          position:"fixed",bottom:"100px",
+          right:"30px",
+          zIndex:"1000"
+
+          }}
+          onClick={doClick}
+           >
+          <KeyboardArrowDownIcon style={{fontSize:"2rem"}}/>
+        </IconButton>}
+        <div ref={ref}></div>
       </>
     </ScrollableFeed>
   );
