@@ -313,7 +313,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
             <div className="messages">
               {
                 loading ?(
-                  <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
+                  <Backdrop sx={{ color: 'rgb(0, 128, 105)', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
                <CircularProgress color="inherit" />
                 </Backdrop>
                 ):(

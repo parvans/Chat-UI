@@ -14,23 +14,29 @@ import DoneAllIcon from '@mui/icons-material/DoneAll';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { Spinner } from "reactstrap";
 import { useEffect } from "react";
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Button, IconButton } from '@mui/material';
 import { useRef } from 'react';
+import { position } from '@chakra-ui/react';
 
 export default function ScrollableMessages({ messages }) {
   const userId = localStorage.getItem("auth-token");
   const uId = jwtDecode(userId)?.id;
   const [readMore,setReadMore]=useState(false);
-  const [isHovering, setIsHovering] = useState(false);
-  const [scrollup, setScrollup] = useState(false);
-  const handleMouseOver = () => {
-    setIsHovering(true);
+  const [isHovering, setIsHovering] = useState(-1);
+  const [scrollUp, setScrollUp] = useState();
+  const ref = useRef(null);
+  const myRef = useRef();
+  const handleMouseOver = (i) => {
+    setIsHovering(i);
   };
 
   const handleMouseOut = () => {
-    setIsHovering(false);
+    setIsHovering(-1);
   };
+
+  
 
   const groupedDays = messages.reduce((groups, message) => {
     //const date = moment(message.createdAt).format('DD/MM/YYYY')
@@ -51,18 +57,25 @@ export default function ScrollableMessages({ messages }) {
     return groups;
   }, {});
 
-  // console.log(groupedDays);
   const groupArrays = Object.keys(groupedDays).map((date) => {
     return {
       date,
       messages: groupedDays[date],
     };
   });
-  //  console.log(groupArrays);
 
-const ref = useRef(null);
-  const doClick = () => ref.current?.scrollIntoView({behavior: 'smooth'})
+  //To scroll to bottom on new message
+  const doClick = () => ref.current?.scrollIntoView({behavior: 'smooth'});
 
+  useEffect(() => {
+    const observer=new IntersectionObserver((entries)=>{
+      const entry=entries[0];
+      setScrollUp(entry.isIntersecting)
+      //console.log("entry",entry);
+    })
+    observer.observe(myRef.current);
+  },[])
+  //console.log("scrollUp",scrollUp);
   return (
     <ScrollableFeed className="scroll-vard">
       <>
@@ -78,21 +91,20 @@ const ref = useRef(null);
                     
                     {(isSameSender(group.messages, message, index, uId) ||
                       isLastMessage(group.messages, index, uId)) && (
+                        message.chat.isGroupChat && 
                       <Tooltip
                         title={message.sender.name}
                         arrow
                         placement="top-start"
                       >
-                        {/* <div className="user-avatar" style={{backgroundColor: `${message.sender._id === uId ? "#BEE3F8" : "#B9F5D0"}`}}>
-                          {message.sender.name[0]?.toUpperCase()}
-                        </div> */}
-                        <Avatar src={message.sender?.image} sx={{ width: 40, height: 40 ,marginBottom:"10px"}}/>
+                        <Avatar src={message.sender?.image} sx={{ width: 40, height: 40 ,marginBottom:"10px",marginRight:"10px"}}/>
 
                       </Tooltip>
                     )}
 
-                    <div
-                    
+                    <div 
+                    onMouseOver={()=>handleMouseOver(message._id)}
+                    onMouseOut={handleMouseOut}
                       style={{
                         backgroundColor: `${
                           message.sender._id === uId ? "#008069" : "rgb(38 48 53)"
@@ -105,13 +117,8 @@ const ref = useRef(null);
                         padding: "5px 5px",
                         fontSize:"17px",
                         maxWidth: "75%",
-                        marginLeft: isSameSenderMargin(
-                          group.messages,
-                          message,
-                          index,
-                          uId
-                        ),
-                        marginRight:`${message.sender._id === uId ? "70px" : "0px"}`,
+                        marginLeft: isSameSenderMargin(group.messages,message,index,uId),
+                        //marginRight:`${message.sender._id === uId ? "70px" : "0px"}`,
                         marginTop: isSameUser(
                           group.messages,
                           message,
@@ -124,10 +131,6 @@ const ref = useRef(null);
                           
                       }}
                     >
-                      {/* <div style={{margin:"4px",display:"flex",justifyContent:"space-between",alignItems:"center"}}
-                        onMouseOver={handleMouseOver}
-                        onMouseOut={handleMouseOut}
-                      > */}
                         
                       {message.content.length > 1000 ? (
                         <>
@@ -150,17 +153,18 @@ const ref = useRef(null);
                       ) : (
                         message.content
                       )}
-                      {/* {
-                          isHovering && message.sender._id === uId 
-                          && (
-                            <div style={{display:"flex",justifyContent:"flex-end",alignItems:"center"}}>
+                       <span key={index}>
+                      {
+                          isHovering === message._id &&
+                           (
 
-                            <KeyboardArrowDownIcon style={{fontSize:"1.5rem",color:"white",cursor:"pointer",justifyContent:"flex-end"}}/>
-                            </div>
+                            <KeyboardArrowDownIcon style={{fontSize:"1.5rem",color:"rgb(223 205 205)",cursor:"pointer"}}/>
+                            // </div>
                           )
-                        } */}
-                    {/* </div> */}
-                      {/* <br /> */}
+                        }
+                      </span>
+                     
+                      
                       <div className="time-stamp">
 
                       <small
@@ -193,7 +197,7 @@ const ref = useRef(null);
                         
                       }
 
-
+                       
                       </div>
                     </div>
                   </div>
@@ -201,12 +205,12 @@ const ref = useRef(null);
             </div>
           </div>
         ))}
-        { setScrollup &&
-          <IconButton 
+          { !scrollUp &&  
+            <IconButton 
         style={{
           backgroundColor:"#202c33",
-          color:"white",width:"50px",
-          height:"50px",borderRadius:"50%",
+          color:"white",width:"40px",
+          height:"40px",borderRadius:"50%",
           marginTop:"10px", marginLeft:"auto",
           position:"fixed",bottom:"100px",
           right:"30px",
@@ -215,8 +219,9 @@ const ref = useRef(null);
           }}
           onClick={doClick}
            >
-          <KeyboardArrowDownIcon style={{fontSize:"2rem"}}/>
+          <KeyboardDoubleArrowDownIcon style={{fontSize:"1.4rem",color:"rgb(174, 186, 193)"}}/>
         </IconButton>}
+        <div ref={myRef}></div>
         <div ref={ref}></div>
       </>
     </ScrollableFeed>
