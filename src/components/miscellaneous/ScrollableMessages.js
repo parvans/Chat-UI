@@ -107,7 +107,7 @@ export default function ScrollableMessages({ messages }) {
                     onMouseOut={handleMouseOut}
                       style={{
                         backgroundColor: `${
-                          message.sender._id === uId ? "#008069" : "rgb(38 48 53)"
+                          message.sender._id === uId ? "rgb(0 85 69)" : "rgb(38 48 53)"
                         }`,
                         borderRadius: `${   
                           message.sender._id === uId
@@ -191,7 +191,7 @@ export default function ScrollableMessages({ messages }) {
                             {message.status==="received" && <DoneAllIcon style={{fontSize: "15px", color: "rgb(223 205 205)", marginLeft: "5px"}}/>   }
 
                             {/* For message seen  */}
-                            { message.status==="seen" && <DoneAllIcon style={{fontSize: "15px", color: "#2cbae7", marginLeft: "5px"}}/> }
+                            { message.status==="seen" && <DoneAllIcon style={{fontSize: "15px", color: "rgb(0 230 255)", marginLeft: "5px"}}/> }
                         </>
 
                         
