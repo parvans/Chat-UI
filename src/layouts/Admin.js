@@ -27,7 +27,7 @@ import Sidebar from "components/Sidebar/Sidebar.js";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
 import routes from "routes.js";
-import NotFound from "views/ezhuth/NotFound";
+import NotFound from "views/chatbot/NotFound";
 
 var ps;
 

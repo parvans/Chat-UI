@@ -26,10 +26,10 @@ import "assets/demo/demo.css";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 
 import AdminLayout from "layouts/Admin.js";
-import Login from "views/ezhuth/auth/Login.js";
+import Login from "views/chatbot/auth/Login.js";
 import ChatProvider from "context/ChatProvider";
-import ChatArea from "views/ezhuth/Chat/ChatArea";
-import NotFound from "views/ezhuth/NotFound";
+import ChatArea from "views/chatbot/Chat/ChatArea";
+import NotFound from "views/chatbot/NotFound";
 import DemoNavbar from "components/Navbars/DemoNavbar.js";
        
 const root = ReactDOM.createRoot(document.getElementById("root"));

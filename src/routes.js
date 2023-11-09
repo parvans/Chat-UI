@@ -18,7 +18,7 @@
 */
 import Dashboard from "views/Dashboard.js";
 import UserPage from "views/User.js";
-import ChatArea from "views/ezhuth/Chat/ChatArea";
+import ChatArea from "views/chatbot/Chat/ChatArea";
 // import Notifications from "views/Notifications.js";
 // import Icons from "views/Icons.js";
 // import Typography from "views/Typography.js";
