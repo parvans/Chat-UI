@@ -18,6 +18,20 @@
 }
 
 
+#light-mychat{
+  background-color: #efefef;
+  height: 100%;
+  display: flex;
+}
+
+#header{
+  background-color: #202c33;
+}
+
+#light-header{
+  background-color: #e0dfdf;
+}
+
 #mychat{
   background-color: #111b21;
   height: 100%;
@@ -69,7 +83,9 @@ margin-top: 5px;
 }
 
 .chat-user-item:hover{
-  background-color: #131f25;
+  background-color: #131f25 !important;
+  transition: all;
+  transition-duration: 0.5s;
 
 }
 

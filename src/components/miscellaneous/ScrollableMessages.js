@@ -110,7 +110,7 @@ export default function ScrollableMessages({ messages }) {
                         borderRadius: `${message.sender._id === uId? "10px 0px 10px 10px": "0px 10px 10px 10px"}`,
                         marginLeft: isSameSenderMargin(group.messages,message,index,uId),
                         marginTop: isSameUser(group.messages,message,index,uId) ? 10 : 15,
-                        //marginRight:`${message.sender._id === uId ? "70px" : "0px"}`,
+                        marginRight:`${message.sender._id === uId ? "20px" : "0px"}`,
                         fontSize:"15px",
                         maxWidth: "75%",
                         padding: "5px 5px",

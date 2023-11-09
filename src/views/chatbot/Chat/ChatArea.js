@@ -5,13 +5,13 @@ import React, { useEffect, useState } from "react";
 import { Row } from "reactstrap";
 import "./style.css";
 export default function ChatArea() {
-  const { user,} = ChatState();
+  const { user,isDarkMode, setIsDarkMode} = ChatState();
   const [fetchAgain, setFetchAgain] = useState(false);
 
   return (
     <div className="content">
       {/* <DemoNavbar /> */}
-      <Row className="chat">
+      <Row className={!isDarkMode ? "light-chat" : "chat"}>
         {user && (
           <MyChats fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
         )}
@@ -19,6 +19,7 @@ export default function ChatArea() {
           <ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
         )}
       </Row>
+        
     </div>
   );
 }

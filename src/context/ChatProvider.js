@@ -12,6 +12,7 @@ const ChatProvider = ({ children }) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [isRefresh, setIsRefresh] = useState(false);
   const [userDetails, setUserDetails] = useState();
+  const [isDarkMode, setIsDarkMode] = useState(true); 
   const [alert, setAlert] = useState({
     isAlert: false,
     severity: "info",
@@ -62,7 +63,6 @@ const ChatProvider = ({ children }) => {
       window.removeEventListener("resize", handleWindowResize);
     };
   });
-
   return (
     <ChatContext.Provider
       value={{
@@ -74,7 +74,8 @@ const ChatProvider = ({ children }) => {
         userDetails,
         isRefresh,setIsRefresh,
         loading, setLoading,
-        alert, setAlert
+        alert, setAlert,
+        isDarkMode, setIsDarkMode
       }}
     >
       {children}

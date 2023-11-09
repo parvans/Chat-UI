@@ -46,22 +46,11 @@ import { getUsers } from "utilities/apiService";
 import { accessChat } from "utilities/apiService";
 import Group from "components/Group";
 import Confetti from 'react-confetti'
-
+import { DarkModeSwitch } from 'react-toggle-dark-mode';
 export default function MyChats({ fetchAgain, setFetchAgain }) {
   const [loggedUser, setLoggedUser] = useState();
-  const {
-    selectedChat,
-    user,
-    setSelectedChat,
-    chats,
-    setChats,
-    windowWidth,
-    userDetails,
-    isRefresh,
-    setIsRefresh,
-    notifications,
-    setNotifications,
-  } = ChatState();
+  const {selectedChat,user,setSelectedChat,chats,setChats,windowWidth,
+  userDetails,isRefresh,setIsRefresh,notifications,setNotifications,isDarkMode, setIsDarkMode} = ChatState();
 
   const userId = jwtDecode(localStorage.getItem("auth-token"));
   const [play] = useSound(message1);
@@ -75,6 +64,10 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
   const open = Boolean(anchorEl);
 
   //console.log(userDetails);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+  };
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -159,9 +152,16 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
       }
       md={windowWidth <= 993 ? "12" : "4"}
     >
-      <Card className="card-user" id="mychat">
-        <CardHeader style={{ backgroundColor: "#202c33" }}>
-          
+      <Card className="card-user" id={!isDarkMode ? "light-mychat" : "mychat"}>
+        
+        <CardHeader id={!isDarkMode ? "light-header" : "header"}>
+
+        <DarkModeSwitch
+      style={{ marginBottom: '2rem' }}
+      checked={isDarkMode}
+      onChange={toggleDarkMode}
+      size={30}
+    />
           {
             newGroup ? (
               (
@@ -269,6 +269,7 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
           ) : 
           (
             <div style={{ display: "flex", flexDirection: "row" }}>
+              
               <ArrowBackIcon
                 style={{
                   color: "#d1d7db",
