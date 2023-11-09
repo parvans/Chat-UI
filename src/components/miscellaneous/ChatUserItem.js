@@ -131,6 +131,9 @@ export default function ChatUserItem({ name, image, onClick,chat}) {
               chat?.latestMessage?.content
             }
           </span>
+          {/* <span style={{ fontSize: "0.8rem", color: "#00a884" }}>
+            typing . . .
+          </span> */}
           </div>
         </div>
         <div style={{display: "flex",flexDirection: "column",marginLeft: "auto",marginRight: "1rem",alignItems: "center",justifyContent: "center"}}>

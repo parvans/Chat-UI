@@ -30,7 +30,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 //==================================================================>>
 
-const ENDPOINT = "http://192.168.1.66:9000";
+const ENDPOINT = "http://192.168.1.79:9000";
 var socket,selectedChatCompare;
 
 export default function SingleChat({ fetchAgain, setFetchAgain }) {
@@ -225,7 +225,9 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   }
 
   return (
-    <div style={{width:"100%",height:"100%"}}>
+    <div style={{width:"100%",height:"100%"}} 
+    // onClick={()=>setIsEmoji(false)}
+    >
       {selectedChat ? (
         <>
         <div style={{display:"flex",flexDirection:"row",alignItems:"center",height:"12vh",color:"white"}}>
@@ -272,7 +274,9 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                 selectedChat?.users[1]?.image:selectedChat?.users[0]?.image
               )
 
-              } sx={{width: 50,height: 50,marginRight: "1rem"}} />
+              } 
+              sx={{width: 50,height: 50,marginRight: "1rem"}}
+            />
             <div style={{display:"flex",flexDirection:"column"}}>
             <Text fontSize={20} mt={30}>
               {
@@ -336,7 +340,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                     sx={{
                       borderRadius: 3,
                       backgroundColor: "#202c33",
-                      marginBottom: "1rem",
+                      marginBottom: "3rem",
                       "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
                         borderColor: "#182329",
                       },

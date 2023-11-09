@@ -1,6 +1,6 @@
 //  ******************** Base URL ***********************
 // let baseUrl = "http://localhost:9000/api/";
-let baseUrl = "http://192.168.1.66:9000/api/";
+let baseUrl = "http://192.168.1.79:9000/api/";
 //  ******************** Token ***********************
 var token = localStorage.getItem('auth-token')
 //  ******************** User API ***********************

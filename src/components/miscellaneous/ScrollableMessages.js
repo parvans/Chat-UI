@@ -103,35 +103,22 @@ export default function ScrollableMessages({ messages }) {
                     )}
 
                     <div 
-                    onMouseOver={()=>handleMouseOver(message._id)}
-                    onMouseOut={handleMouseOut}
+                    // onMouseOver={()=>handleMouseOver(message._id)}
+                    // onMouseOut={handleMouseOut}
                       style={{
-                        backgroundColor: `${
-                          message.sender._id === uId ? "rgb(0 85 69)" : "rgb(38 48 53)"
-                        }`,
-                        borderRadius: `${   
-                          message.sender._id === uId
-                          ? "10px 0px 10px 10px"
-                          : "0px 10px 10px 10px"
-                        }`,
-                        padding: "5px 5px",
-                        fontSize:"17px",
-                        maxWidth: "75%",
+                        backgroundColor: `${message.sender._id === uId ? "rgb(0 85 69)" : "rgb(38 48 53)"}`,
+                        borderRadius: `${message.sender._id === uId? "10px 0px 10px 10px": "0px 10px 10px 10px"}`,
                         marginLeft: isSameSenderMargin(group.messages,message,index,uId),
+                        marginTop: isSameUser(group.messages,message,index,uId) ? 10 : 15,
                         //marginRight:`${message.sender._id === uId ? "70px" : "0px"}`,
-                        marginTop: isSameUser(
-                          group.messages,
-                          message,
-                          index,
-                          uId
-                        )
-                          ? 3
-                          : 10,
-                          color: `${message.sender._id === uId ? "white" : "white"}`,
+                        fontSize:"15px",
+                        maxWidth: "75%",
+                        padding: "5px 5px",
+                        color: `${message.sender._id === uId ? "white" : "white"}`,
                           
                       }}
                     >
-                        
+                        {/* This is for croping the large text messages */}
                       {message.content.length > 1000 ? (
                         <>
                           {readMore ? (
@@ -153,7 +140,7 @@ export default function ScrollableMessages({ messages }) {
                       ) : (
                         message.content
                       )}
-                       <span key={index}>
+                       {/* <span key={index}>
                       {
                           isHovering === message._id &&
                            (
@@ -162,7 +149,7 @@ export default function ScrollableMessages({ messages }) {
                             // </div>
                           )
                         }
-                      </span>
+                      </span> */}
                      
                       
                       <div className="time-stamp">
