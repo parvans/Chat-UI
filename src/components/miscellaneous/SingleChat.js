@@ -1,18 +1,15 @@
 import { FormControl, Text } from "@chakra-ui/react";
 import { ChatState } from "context/ChatProvider";
 import React, { useEffect, useState } from "react";
-import { Badge, Button } from "reactstrap";
+import { Badge } from "reactstrap";
 import selcetchat from "../../assets/img/selectchat.png";
 import jwtDecode from "jwt-decode";
-import ProfileModal from "./ProfileModal";
-import GroupUpdateModal from "./GroupUpdateModal";
 import { sendUserMessage } from "utilities/apiService";
 import { fetcheMessages } from "utilities/apiService";
 import "./styles.css"
 import ScrollableMessages from "./ScrollableMessages";
 import { io } from "socket.io-client";
-import Lottie from 'react-lottie';
-import typings from '../../../src/animations/typing.json'
+// import typings from '../../../src/animations/typing.json'
 import { IconButton } from "@material-ui/core";
 import TextField from '@mui/material/TextField';
 import { Avatar, InputAdornment } from "@mui/material";
@@ -25,12 +22,12 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import message1 from '../../assets/audio/message1.mp3'
 import useSound from 'use-sound';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
+// import AttachFileIcon from '@mui/icons-material/AttachFile';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 //==================================================================>>
 
-const ENDPOINT = "http://192.168.1.79:9000";
+const ENDPOINT = "http://192.168.1.61:9000";
 var socket,selectedChatCompare;
 
 export default function SingleChat({ fetchAgain, setFetchAgain }) {
@@ -48,14 +45,14 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   // var pp=navigator.onLine;
   // console.log(pp);
 
-  const defaultOptions={
-    loop:true,
-    autoplay:true,
-    animationData:typings,
-    rendererSettings:{
-      preserveAspectRatio:"xMidYMid slice"
-    }
-  }
+  // const defaultOptions={
+  //   loop:true,
+  //   autoplay:true,
+  //   animationData:typings,
+  //   rendererSettings:{
+  //     preserveAspectRatio:"xMidYMid slice"
+  //   }
+  // }
 
   const handleMessageSend = (messageId) => {
     socket.emit('messageSend',messageId);

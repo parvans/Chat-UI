@@ -1,5 +1,4 @@
-import { min } from 'moment'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { toast, Toaster } from 'react-hot-toast'
 import { useHistory } from 'react-router-dom'
 import { Button, Card, CardBody, CardGroup, CardSubtitle, CardTitle, Col, Container, FormGroup, Input, Label, Row, Spinner } from 'reactstrap'
@@ -8,13 +7,13 @@ import { userResetPassword } from 'utilities/apiService'
 import { verifyUserOtp } from 'utilities/apiService'
 import { userRegister } from 'utilities/apiService'
 import { userLogin } from 'utilities/apiService'
-import chatbot from '../../../assets/img/Chat bot-amico.png'
-import ImagePicker from 'components/ImagePicker'
+// import chatbot from '../../../assets/img/Chat bot-amico.png'
+// import ImagePicker from 'components/ImagePicker'
 export default function Login() {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [selectedImage, setSelectedImage] = useState("");
+    // const [selectedImage, setSelectedImage] = useState("");
     const [confirmPassword, setConfirmPassword] = useState('')
     const [otp, setOtp] = useState('')
     // errors
@@ -29,7 +28,7 @@ export default function Login() {
     const [isOtp, setIsOtp] = useState(false)
     const [isResetPassword, setIsResetPassword] = useState(false)
     const [loading, setLoading] = useState(false)
-    const [error, setError] = useState(false)
+     //const [error, setError] = useState(false)
     const navigation = useHistory()
 
     const handleLogin = async (e) => {
@@ -73,7 +72,7 @@ export default function Login() {
     }
 
     const handleRegister = async (e) => {
-        setError(true)
+        //setError(true)
         e.preventDefault()
         if (!name) {
             setNameError('Name is required')
@@ -121,7 +120,7 @@ export default function Login() {
                     name: name,
                     email: email,
                     password: password,
-                    data: selectedImage,
+                    // data: selectedImage,
                 })
                 console.log(regResponse);
                 if (regResponse.ok) {
@@ -339,10 +338,10 @@ export default function Login() {
                                             <>
                                                 <CardTitle tag='h1'>REGISTER</CardTitle>
                                                 <CardSubtitle tag='h6' className='mb-2 text-muted'>Create your account</CardSubtitle>
-                                                <ImagePicker
+                                                {/* <ImagePicker
                                                 selectedImage={selectedImage}
                                                 setSelectedImage={setSelectedImage}
-                                                />
+                                                /> */}
                                                 <FormGroup>
                                                     
                                                     <Label for='Name'>Name</Label>

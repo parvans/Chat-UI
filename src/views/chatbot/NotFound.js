@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { Col, Row } from "reactstrap";
 import notfound from "assets/img/notfound404.png";
 const NotFound = () => (

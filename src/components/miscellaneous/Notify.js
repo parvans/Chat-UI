@@ -3,7 +3,7 @@ import jwtDecode from "jwt-decode";
 import React from "react";
 
 export default function Notify({ notification, handleFunction }) {
-    const {user,setSelectedChat,chats,setChats,notifications,setNotifications}=ChatState()
+    const {setSelectedChat,notifications,setNotifications}=ChatState()
 
   return (
     <div
