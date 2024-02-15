@@ -119,7 +119,7 @@ export default function ScrollableMessages({ messages }) {
                       }}
                     >
                         {/* This is for croping the large text messages */}
-                      {message.content.length > 1000 ? (
+                      {message.content?.length > 1000 ? (
                         <>
                           {readMore ? (
                             <>

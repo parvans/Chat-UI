@@ -1,6 +1,6 @@
 //  ******************** Base URL ***********************
 // let baseUrl = "http://localhost:9000/api/";
-let baseUrl = "http://192.168.1.61:9000/api/";
+let baseUrl = "http://localhost:9000/api/";
 //  ******************** Token ***********************
 var token = localStorage.getItem('auth-token')
 //  ******************** User API ***********************
@@ -24,7 +24,9 @@ export const userRegister = async (body) => {
     const requestOptions = {
         method: "POST",
         mode: "cors",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+            "Content-Type": "application/json" 
+        },
         body: JSON.stringify(body)
     }
     const response = await fetch(baseUrl + "user/register", requestOptions)
@@ -40,7 +42,10 @@ export const userProfile = async () => {
     const requestOptions = {
         method: "GET",
         mode: "cors",
-        headers: { "Content-Type": "application/json", "auth-token": token },
+        headers: { 
+            "Content-Type": "application/json",
+            "Authorization": token 
+        },
     }
     const response = await fetch(baseUrl + "user/userprofile", requestOptions)
     if (!response.ok) {
@@ -57,7 +62,7 @@ export const userEdit=async(body)=>{
         mode: "cors",
         headers: { 
             "Content-Type": "application/json",
-            "auth-token":token 
+            "Authorization":token 
         },
         body: JSON.stringify(body)
     }
@@ -75,7 +80,9 @@ export const verifyUserEmail = async (body) => {
     const requestOptions = {
         method: "POST",
         mode: "cors",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+            "Content-Type": "application/json" 
+        },
         body: JSON.stringify(body)
     }
     const response = await fetch(baseUrl + "user/verifyemail", requestOptions)
@@ -90,7 +97,9 @@ export const verifyUserOtp = async (body) => {
     const requestOptions = {
         method: "POST",
         mode: "cors",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+            "Content-Type": "application/json" 
+        },
         body: JSON.stringify(body)
     }
     const response = await fetch(baseUrl + "user/verifyotp", requestOptions)
@@ -105,7 +114,9 @@ export const userResetPassword = async (body) => {
     const requestOptions = {
         method: "POST",
         mode: "cors",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+            "Content-Type": "application/json" 
+        },
         body: JSON.stringify(body)
     }
     const response = await fetch(baseUrl + "user/resetpassword", requestOptions)
@@ -121,7 +132,10 @@ export const getUsers = async (keword) => {
     const requestOptions = {
         method: "GET",
         mode: "cors",
-        headers: { "Content-Type": "application/json", "auth-token": token },
+        headers: { 
+            "Content-Type": "application/json", 
+            "Authorization": token 
+        },
     }
     const response = await fetch(baseUrl + `user/users?search=${keword}`, requestOptions)
     if (!response.ok) {
@@ -138,7 +152,7 @@ export const accessChat = async (userId) => {
         mode: "cors",
         headers: { 
             "Content-Type": "application/json", 
-            "auth-token": token 
+            "Authorization": token 
         },
         body: JSON.stringify({userId})
     }
@@ -157,7 +171,7 @@ export const getChats = async () => {
         mode: "cors",
         headers: { 
             "Content-Type": "application/json", 
-            "auth-token": token 
+            "Authorization": token 
         },
     }
     const response = await fetch(baseUrl + "chat/fetchchat", requestOptions)
@@ -175,7 +189,7 @@ export const createGroup = async (body) => {
         mode: "cors",
         headers: { 
             "Content-Type": "application/json", 
-            "auth-token": token 
+            "Authorization": token 
         },
         body: JSON.stringify(body)
     }
@@ -194,7 +208,7 @@ export const renameGroup = async (body) => {
         mode: "cors",
         headers: { 
             "Content-Type": "application/json", 
-            "auth-token": token 
+            "Authorization": token 
         },
         body: JSON.stringify(body)
     }
@@ -214,7 +228,7 @@ export const groupAddMember = async (body) => {
         mode: "cors",
         headers: { 
             "Content-Type": "application/json", 
-            "auth-token": token 
+            "Authorization": token 
         },
         body: JSON.stringify(body)
     }
@@ -233,7 +247,7 @@ export const groupRemoveMember = async (body) => {
         mode: "cors",
         headers: { 
             "Content-Type": "application/json", 
-            "auth-token": token 
+            "Authorization": token 
         },
         body: JSON.stringify(body)
     }
@@ -252,7 +266,7 @@ export const sendUserMessage = async (body) => {
         mode: "cors",
         headers: { 
             "Content-Type": "application/json", 
-            "auth-token": token 
+            "Authorization": token 
         },
         body: JSON.stringify(body)
     }
@@ -271,7 +285,7 @@ export const fetcheMessages = async (chatId) => {
         mode: "cors",
         headers: { 
             "Content-Type": "application/json", 
-            "auth-token": token 
+            "Authorization": token 
         },
     }
     const response = await fetch(baseUrl + `message/${chatId}`, requestOptions)
@@ -290,7 +304,7 @@ export const editMessage = async (body,id) => {
         mode: "cors",
         headers: { 
             "Content-Type": "application/json", 
-            "auth-token": token 
+            "Authorization": token 
         },
         body: JSON.stringify(body)
     }

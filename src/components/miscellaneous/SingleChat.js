@@ -27,7 +27,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 //==================================================================>>
 
-const ENDPOINT = "http://192.168.1.61:9000";
+const ENDPOINT = "http://localhost:9000";
 var socket,selectedChatCompare;
 
 export default function SingleChat({ fetchAgain, setFetchAgain }) {

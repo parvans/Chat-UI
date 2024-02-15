@@ -146,12 +146,12 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
         
         <CardHeader id={!isDarkMode ? "light-header" : "header"}>
 
-        <DarkModeSwitch
+        {/* <DarkModeSwitch
       style={{ marginBottom: '2rem' }}
       checked={isDarkMode}
       onChange={toggleDarkMode}
       size={30}
-    />
+    /> */}
           {
             newGroup ? (
               (
