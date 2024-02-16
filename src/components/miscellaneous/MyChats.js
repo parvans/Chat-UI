@@ -132,6 +132,7 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
 
   return (
     <Col
+    className="scroll-vard"
       style={
         windowWidth <= 993
           ? selectedChat
