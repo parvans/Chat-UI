@@ -1,3 +1,5 @@
+import './styles.css'
+import { IconButton } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { toast, Toaster } from 'react-hot-toast'
 import { useHistory } from 'react-router-dom'
@@ -9,7 +11,11 @@ import { userRegister } from 'utilities/apiService'
 import { userLogin } from 'utilities/apiService'
 // import chatbot from '../../../assets/img/Chat bot-amico.png'
 // import ImagePicker from 'components/ImagePicker'
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { InputAdornment, TextField } from '@mui/material'
 export default function Login() {
+    const [showPassword, setShowPassword] = useState(false)
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -65,7 +71,7 @@ export default function Login() {
                     setLoading(false)
                 }, 1000);
                 if(!loading){
-                    toast.error(response.data.message)
+                    toast.error(response.data.error)
                 }
             }
         }
@@ -74,46 +80,43 @@ export default function Login() {
     const handleRegister = async (e) => {
         //setError(true)
         e.preventDefault()
-        if (!name) {
+        if (name==='') {
             setNameError('Name is required')
         } else {
             setNameError('')
         }
-        if (!email) {
+        if (email==='') {
             setEmailError('Email is required')
         } else if (!/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{3}$/.test(email)) {
             setEmailError('Email is invalid')
         } else {
             setEmailError('')
         }
-        if (!password) {
+        if (password==='') {
             setPasswordError('Password is required')
-        }else if(password.length < 6){
-            setPasswordError('Password must be at least 6 characters')
-        }else if(password.length > 15){
-            setPasswordError('Password must be at most 15 characters')
-        }else if(!/(?=.*?[A-Z])/.test(password)){
-            setPasswordError('Password must contain at least one uppercase letter')
-        }else if(!/(?=.*?[a-z])/.test(password)){
-            setPasswordError('Password must contain at least one lowercase letter')
-        }else if(!/(?=.*?[0-9])/.test(password)){
-            setPasswordError('Password must contain at least one digit')
-        }else if(!/(?=.*?[#?!@$%^&*-])/.test(password)){
-            setPasswordError('Password must contain at least one special character')
-        }else{
+        }
+        // else if(password.length < 6){
+        //     setPasswordError('Password must be at least 6 characters')
+        // }else if(password.length > 15){
+        //     setPasswordError('Password must be at most 15 characters')
+        // }else if(!/(?=.*?[A-Z])/.test(password)){
+        //     setPasswordError('Password must contain at least one uppercase letter')
+        // }else if(!/(?=.*?[a-z])/.test(password)){
+        //     setPasswordError('Password must contain at least one lowercase letter')
+        // }else if(!/(?=.*?[0-9])/.test(password)){
+        //     setPasswordError('Password must contain at least one digit')
+        // }else if(!/(?=.*?[#?!@$%^&*-])/.test(password)){
+        //     setPasswordError('Password must contain at least one special character')
+        // }
+        else{
             setPasswordError('')
         }
-        if (!confirmPassword) {
+        if (confirmPassword==='') {
             setConfirmPasswordError('Confirm Password is required')
         }else if(confirmPassword !== password){
             setConfirmPasswordError('Confirm Password must be same as Password')
         }else{
             setConfirmPasswordError('')
-        }
-
-        if(nameError || emailError || passwordError  || confirmPasswordError){
-            console.log("error"); 
-        }else{
             try {
                 setLoading(true)
                 const regResponse = await userRegister({
@@ -146,10 +149,16 @@ export default function Login() {
                 }, 1000);
                 console.log(error);
             }
+        }
+
+        // if(nameError || emailError || passwordError  || confirmPasswordError){
+        //     console.log("error"); 
+        // }else{
+            
            
         }
             
-    }
+    
 
     const verifyEmail = async (e) => {
         e.preventDefault()
@@ -259,8 +268,9 @@ export default function Login() {
             }
         }
     }
+
     return (
-        <div className='bg-light min-vh-100 d-flex flex-row align-items-center'>
+        <div className='authContainer'>
             {/* <Container style={{
                 backgroundColor: '#6bd098',
                 minHeight: '100vh',
@@ -377,6 +387,12 @@ export default function Login() {
                                                     <Input disabled={loading} placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                                                     {emailError && <p className='text-danger'>{emailError}</p>}
                                                     <Label for='examplePassword'>Password</Label>
+                                                    {/* <span className='showPassword'>
+                                                    <Input disabled={loading} placeholder="Password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} />
+                                                    <IconButton className='iconButton' aria-label="Show Password" onClick={() => setShowPassword(!showPassword)}>
+                                                        { showPassword ? <VisibilityOffIcon /> : <VisibilityIcon /> }
+                                                    </IconButton>
+                                                    </span> */}
                                                     <Input disabled={loading} placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                                                     {passwordError && <p className='text-danger'>{passwordError}</p>}
                                                     <span style={{cursor:'pointer',color: "#4ec94e"}} onClick={() => setIsForgotPassword(true)}>
@@ -385,9 +401,15 @@ export default function Login() {
                                                     <Button disabled={loading} color='success' className='mt-3 btn-round' block onClick={handleLogin}>
                                                         {loading ? <Spinner style={{width:20,height:20}} color='light' /> : 'Login'}
                                                         </Button>
-                                                    <p className='text-center mt-3'>Don't have an account? <span style={{cursor:'pointer',color: "#4ec94e"}} onClick={() => setIsRegister(true)}>Sign Up</span></p>
+                                                    <p className='text-center mt-3'>Don't have an account? <span style={{cursor:'pointer',color: "#4ec94e"}} onClick={() => {
+                                                        setIsRegister(true)
+                                                        clearError()
+                                                        }
+                                                    }>Sign Up</span></p>
                                                 </FormGroup>
                                             </>
+
+                                        
                                         )
                                     }
                                 </CardBody>

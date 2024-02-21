@@ -101,7 +101,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
       try {
         const res=await sendUserMessage({
           chatId:selectedChat?._id,
-          cotent:latestMessage
+          content:latestMessage
         })
         setLatestMessage("")
         if(res.ok){
