@@ -143,7 +143,7 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
       }
       md={windowWidth <= 993 ? "12" : "4"}
     >
-      <Card className="card-user" id={!isDarkMode ? "light-mychat" : "mychat"}>
+      <Card className="card-user" id="mychat">
         
         <CardHeader id={!isDarkMode ? "light-header" : "header"}>
 

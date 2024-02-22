@@ -36,7 +36,7 @@ export const isLastMessage = (messages, i, userId) => {
         messages[i].sender._id !== userId) ||
       (i === messages.length - 1 && messages[i].sender._id !== userId)
     )
-      return 0;
+      return 6;
     else return "auto";
   };
 

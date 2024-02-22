@@ -36,6 +36,7 @@
   background-color: #111b21;
   height: 100%;
   display: flex;
+  border-radius: 0;
 }
 
 #chatbox{
@@ -91,6 +92,68 @@ margin-top: 5px;
 .scroll-vard{
   padding-left: 0;
   padding-right: 0;
+}
+.chatboxChat{
+  /* style={{
+    display:"flex",flexDirection:"column",justifyContent:"flex-end",
+    width:"100%",height:"87vh",overflow:"hidden",
+    padding:10,borderRadius:10, */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 100%;
+    height: 92vh;
+    overflow: hidden;
+}
+
+#userIc{
+  position: absolute;
+  top: -5px;
+  right: -7px;
+  color: rgb(0, 85, 69);
+}
+#recieverIc{
+  position: absolute;
+  top: -5px;
+  left: -7px;
+  color: rgb(38 48 53);
+}
+
+.userMessage{
+  background-color: rgb(0 85 69);
+  border-radius: 10px 0px 10px 10px;
+  margin-right:20px;
+  font-size:15px;
+  max-width: 75%;
+  padding: 5px 10px;
+  color: white;
+}
+.recieverMessage{
+  background-color: rgb(38 48 53);
+  border-radius:0px 10px 10px 10px;
+  margin-right:0px;
+  font-size:15px;
+  max-width: 75%;
+  padding: 5px 10px;
+  color:white;
+}
+
+.read-or-hide {
+  color: #1d74f5;
+  cursor: pointer;
+}
+
+.paraDiv{
+  position: relative; 
+}
+
+.readmorePara{
+  margin: 0;
+  line-height: 18px;
+}
+.readmoreParabold{
+  margin: 0;
+  font-weight: bold;
 }
 
 

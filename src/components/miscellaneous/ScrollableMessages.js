@@ -19,6 +19,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Button, IconButton } from '@mui/material';
 import { useRef } from 'react';
 import { position } from '@chakra-ui/react';
+import ReadMore from './ReadMore';
 
 export default function ScrollableMessages({ messages }) {
   const userId = localStorage.getItem("auth-token");
@@ -103,23 +104,17 @@ export default function ScrollableMessages({ messages }) {
                     )}
 
                     <div 
-                    // onMouseOver={()=>handleMouseOver(message._id)}
-                    // onMouseOut={handleMouseOut}
+                      // onMouseOver={()=>handleMouseOver(message._id)}
+                      // onMouseOut={handleMouseOut}
+                      className={message.sender._id === uId ? "userMessage" : "recieverMessage"}
                       style={{
-                        backgroundColor: `${message.sender._id === uId ? "rgb(0 85 69)" : "rgb(38 48 53)"}`,
-                        borderRadius: `${message.sender._id === uId? "10px 0px 10px 10px": "0px 10px 10px 10px"}`,
                         marginLeft: isSameSenderMargin(group.messages,message,index,uId),
                         marginTop: isSameUser(group.messages,message,index,uId) ? 10 : 15,
-                        marginRight:`${message.sender._id === uId ? "20px" : "0px"}`,
-                        fontSize:"15px",
-                        maxWidth: "75%",
-                        padding: "5px 5px",
-                        color: `${message.sender._id === uId ? "white" : "white"}`,
-                          
+                        position:"relative",                     
                       }}
-                    >
-                        {/* This is for croping the large text messages */}
-                      {message.content?.length > 1000 ? (
+                      >
+                      {/* This is for croping the large text messages */}
+                      {/* {message.content?.length > 1000 ? (
                         <>
                           {readMore ? (
                             <>
@@ -139,8 +134,14 @@ export default function ScrollableMessages({ messages }) {
                         </>
                       ) : (
                         message.content
-                      )}
-                       {/* <span key={index}>
+                      )} */}
+
+                      <ReadMore item={message} user={uId}>
+                        {message.content}
+                      </ReadMore>
+
+
+                      {/* <span key={index}>
                       {
                           isHovering === message._id &&
                            (
@@ -184,10 +185,12 @@ export default function ScrollableMessages({ messages }) {
                         
                       }
 
-                       
+              
                       </div>
+                      
                     </div>
                   </div>
+                  
                 ))}
             </div>
           </div>

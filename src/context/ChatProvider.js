@@ -46,9 +46,9 @@ const ChatProvider = ({ children }) => {
 
   useEffect(() => {
     const userInfo = localStorage.getItem("auth-token");
-    if (userInfo) {
-      fetchUserDetails();
-    }
+    // if (userInfo) {
+    //   fetchUserDetails();
+    // }
   });
   // console.log(userDetails);
 
