@@ -140,7 +140,7 @@ export default function Login() {
                         setLoading(false)
                     }, 1000);
                     if(!loading){
-                    toast.error(regResponse.data.message)
+                    toast.error(regResponse.data.error)
                     }
                 }
             } catch (error) {
@@ -393,17 +393,26 @@ export default function Login() {
                                                         { showPassword ? <VisibilityOffIcon /> : <VisibilityIcon /> }
                                                     </IconButton>
                                                     </span> */}
-                                                    <Input disabled={loading} placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                                                    <Input 
+                                                    onKeyDown={(e) => {
+                                                        if(e.key === 'Enter'){
+                                                            handleLogin(e)
+                                                        }
+
+                                                    }}
+                                                    disabled={loading} placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                                                     {passwordError && <p className='text-danger'>{passwordError}</p>}
                                                     <span style={{cursor:'pointer',color: "#4ec94e"}} onClick={() => setIsForgotPassword(true)}>
                                                         Forgot Password?</span>
                                                     <br />
                                                     <Button disabled={loading} color='success' className='mt-3 btn-round' block onClick={handleLogin}>
                                                         {loading ? <Spinner style={{width:20,height:20}} color='light' /> : 'Login'}
-                                                        </Button>
+                                                    </Button>
                                                     <p className='text-center mt-3'>Don't have an account? <span style={{cursor:'pointer',color: "#4ec94e"}} onClick={() => {
                                                         setIsRegister(true)
                                                         clearError()
+                                                        setEmail('')
+                                                        setPassword('')
                                                         }
                                                     }>Sign Up</span></p>
                                                 </FormGroup>

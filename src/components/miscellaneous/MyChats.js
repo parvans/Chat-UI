@@ -50,7 +50,8 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [noData, setNoData] = useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [searchText, setSearchText] = useState("");
   const open = Boolean(anchorEl);
 
   //console.log(userDetails);
@@ -90,6 +91,7 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
       setLoading(true);
       const res = await getUsers(value);
       if (res?.ok) {
+        console.log(res?.data?.data);
         setSearchResult(res?.data?.data);
       }
       if (res?.data?.data?.length === 0) {
@@ -103,6 +105,13 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+    handleSearch(searchText);
+    },500);
+    return () => clearTimeout(timer);
+  }, [searchText]);
 
   const accessUserChat = async (id) => {
     // console.log(id);
@@ -182,6 +191,7 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
           !profileMode ? (
             <>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
+                {/* <Tooltip title="Profile"> */}
                 <Avatar
                   src={userDetails?.image}
                   sx={{
@@ -192,8 +202,9 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
                   }}
                   onClick={() => setProfileMode(!profileMode)}
                 />
+                {/* </Tooltip> */}
 
-                <Tooltip title="Account settings">
+                {/* <Tooltip title="Account settings"> */}
                   <IconButton
                     onClick={handleClick}
                     size="small"
@@ -204,7 +215,7 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
                   >
                     <MoreVertIcon style={{ color: "#aebac1" }} />
                   </IconButton>
-                </Tooltip>
+                {/* </Tooltip> */}
               </div>
               
               <Menu 
@@ -255,7 +266,8 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
                   </ListItemIcon>
                   Logout
                 </MenuItem>
-              </Menu>
+              </Menu> 
+              
             </>
           ) : 
           (
@@ -283,7 +295,7 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
         }
         </CardHeader>
         
-        <CardBody>
+        <CardBody style={{padding:"4px"}}>
           
           {
             newGroup ? (
@@ -304,8 +316,10 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
                   variant="outlined"
                   placeholder="Search or start a new chat"
                   fullWidth
+                  value={searchText}
                   onChange={(e) => {
-                    handleSearch(e.target.value);
+                    setSearchText(e.target.value);
+                    //  handleSearch(e.target.value);
                     setSearchMode(true);
                   }}
                   InputProps={{
@@ -313,14 +327,15 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
                       <InputAdornment position="start">
                         {searchMode ? (
                           <ArrowBackIcon
-                            onClick={() => {
+                            onClick={(e) => {
+                              setSearchText("");
                               setSearchMode(!searchMode);
                             }}
                             style={{ color: "#6bd098", cursor: "pointer" }}
                           />
                         ) : (
                           <SearchIcon
-                            onClick={() => setSearchMode(true)}
+                            // onClick={() => setSearchMode(true)}
                             style={{ color: "#aebac1", cursor: "pointer" }}
                           />
                         )}
@@ -330,7 +345,10 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
                       <InputAdornment position="end">
                         {searchMode ? (
                           <CloseIcon
-                            // onClick={(e) => clearSearch(e)}
+                            onClick={(e) => {
+                              setSearchText("");
+                              setSearchMode(!searchMode);
+                            }}
                             style={{ color: "#aebac1", cursor: "pointer" }}
                           />
                         ) : (
@@ -390,6 +408,7 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
                                 color={"#d1d7db"}
                                 ml={"2rem"}
                                 fontFamily={"sans-serif"}
+                                textAlign={"center"}
                               >
                                 No data found
                               </Text>

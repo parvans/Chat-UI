@@ -84,7 +84,7 @@ export default function ChatUserItem({ name, image, onClick,chat}) {
   
   // console.log(single);
   return (
-    <div className="chat-user-item">
+    <div className="chat-user-item" style={{height:"7vh"}}>
     <Box onClick={onClick} style={{ cursor: "pointer" }} className="chat-user-item">
       <div style={{ display: "flex", flexDirection: "row" }}>
       {/* <StyledBadge

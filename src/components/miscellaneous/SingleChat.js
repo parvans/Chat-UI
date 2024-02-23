@@ -27,7 +27,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 //==================================================================>>
 
-const ENDPOINT = "ws://192.168.1.240:9000";
+const ENDPOINT = "ws://localhost:9000";
 var socket, selectedChatCompare;
 
 export default function SingleChat({ fetchAgain, setFetchAgain }) {
@@ -230,7 +230,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
               color: "white",
             }}
           >
-            {/* <ArrowBackIcon  style={{ color: "#d1d7db",cursor:"pointer",marginTop:"3px" }} onClick={() => setSelectedChat("")}/> */}
+            <ArrowBackIcon  style={{ color: "#d1d7db",cursor:"pointer",marginTop:"3px" }} onClick={() => setSelectedChat("")}/>
             {/* {
             !selectedChat?.isGroupChat ? (
 
