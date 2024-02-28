@@ -72,15 +72,15 @@ export default function ChatUserItem({ name, image, onClick,chat}) {
   const userId = localStorage.getItem("auth-token");
   const uId = jwtDecode(userId)?.id;
   const {notifications,setNotifications}=ChatState()
-  const [single,setSingle]=useState([])
+  // const [single,setSingle]=useState([])
 
   
 
-  useEffect(()=>{
-    const singleUser=notifications?.filter((item)=>item.chat._id===chat._id)
-    setSingle(singleUser)
-    document.title=`${notifications?.length>0 ? `(${notifications?.length})` : ""} Chatbot`
-  },[notifications])
+  // useEffect(()=>{
+  //   const singleUser=notifications?.filter((item)=>item.chat._id===chat._id)
+  //   setSingle(singleUser)
+  //   document.title=`${notifications?.length>0 ? `(${notifications?.length})` : ""} Chatbot`
+  // },[notifications])
   
   // console.log(single);
   return (
@@ -137,16 +137,16 @@ export default function ChatUserItem({ name, image, onClick,chat}) {
           </div>
         </div>
         <div style={{display: "flex",flexDirection: "column",marginLeft: "auto",marginRight: "1rem",alignItems: "center",justifyContent: "center"}}>
-          <span style={{ fontSize: "0.8rem", color: `${single?.length>0 ? "#00a884" : "#aebac1"}`
+          <span style={{ fontSize: "0.8rem", color: `${chat?.unReadMsgCount>0 ? "#00a884" : "#aebac1"}`
           ,
           whiteSpace: "nowrap"}}>
             { chat?.latestMessage?.createdAt &&
             moment(chat?.latestMessage?.createdAt).format("hh:mm A")
             }
             </span>
-            { single?.length>0 &&
+            { chat?.unReadMsgCount>0 &&
               <StyledBadge1 
-              badgeContent={single?.length}
+              badgeContent={chat?.unReadMsgCount>99 ? "99+" : chat?.unReadMsgCount}
               style={{backgroundColor: "#00a884"}}
               color="success"
                sx={{marginTop: "1rem",whiteSpace: "nowrap"}}>

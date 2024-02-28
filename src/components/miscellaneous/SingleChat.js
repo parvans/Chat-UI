@@ -4,8 +4,8 @@ import React, { useEffect, useState } from "react";
 import { Badge } from "reactstrap";
 import selcetchat from "../../assets/img/selectchat.png";
 import jwtDecode from "jwt-decode";
-import { sendUserMessage } from "utilities/apiService";
-import { fetcheMessages } from "utilities/apiService";
+import { sendUserMessage,fetcheMessages,readMessage } from "utilities/apiService";
+// import { fetcheMessages } from "utilities/apiService";
 import "./styles.css";
 import ScrollableMessages from "./ScrollableMessages";
 import { io } from "socket.io-client";
@@ -47,7 +47,11 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [isEmoji, setIsEmoji] = useState(false);
-  const [play] = useSound(message1);
+  const [chatReload, setChatReload] = useState(false);
+  const user = jwtDecode(localStorage.getItem("auth-token")).id
+  // console.log(user.toString());
+
+  // const [play] = useSound(message1);
 
   // var pp=navigator.onLine;
   // console.log(pp);
@@ -85,12 +89,48 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
 
       if (res.ok) {
         setMessages(res?.data?.data);
+        // Read Message
+        let chat = res.data.data.map((item,index)=>({...item,index:index}))
+        let avoidSender = chat.filter((item)=>item.sender._id!==user&& !item.readBy.some((i)=>i.user==user));
+        // const readRes = await readMessage({
+        //   chatId:avoidSender.chat._id,
+        //   messgId:avoidSender._id
+        // })
+        // console.log(avoidSender);
+
+        let promise = avoidSender.map(async(item)=>{
+          return new Promise(async(resolve,reject)=>{
+            try {
+              let response = await readMessage({
+                chatId:item.chat._id,
+                messgId:item._id
+              })
+              if(response.data.success){
+                resolve(response.data.data)
+              }
+            } catch (error) {
+              reject(error)
+            }
+
+          })
+        })
+        Promise.all(promise).then((data)=>{
+          // console.log(data);
+          // setIsRefresh(!isRefresh)
+          if (data.length !== 0) {
+            console.log(data);
+            socket?.current?.emit('readMessage', data[data.length - 1]);
+          }
+        })
+
         setLoading(false);
         socket.emit("join room", selectedChat?._id);
         socket.on("message received", (newMessage) => {
           if (newMessage) {
-            play();
+            // play();
+            // console.log(newMessage);
             setIsRefresh(!isRefresh);
+
           }
         });
       }
@@ -145,7 +185,8 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
     getMessages();
     selectedChatCompare = selectedChat;
     handleOnlineStatus();
-  }, [selectedChat]);
+  }, [selectedChat,chatReload]);
+  console.log(chatReload);
 
   useEffect(() => {
     socket.on("message received", (newMessage) => {
@@ -214,22 +255,24 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
     }
   };
 
+  useEffect(() => {
+    socket.current?.on('readMessageSender', (data) => {
+      console.log('read msg');
+      // setReadBy(data.readBy);
+      if (data?.chat._id !== undefined) {
+        if (selectedChat._id !== '' && selectedChat._id === data?.chat._id) {
+          setChatReload(!chatReload);
+        }
+      }
+    });
+  });
+
   return (
-    <div
-      style={{ width: "100%", height: "100%" }}
-      // onClick={()=>setIsEmoji(false)}
-    >
+    <div className="rightChatBox">
+
       {selectedChat ? (
         <>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              height: "12vh",
-              color: "white",
-            }}
-          >
+          <div className="chatboxHeader">
             <ArrowBackIcon  style={{ color: "#d1d7db",cursor:"pointer",marginTop:"3px" }} onClick={() => setSelectedChat("")}/>
             {/* {
             !selectedChat?.isGroupChat ? (
@@ -263,7 +306,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
             <Text fontSize={28}>
               {selectedChat?.chatName.toUpperCase()}
             </Text>
-          )} */}
+            )} */}
             <div
               style={{
                 display: "flex",
@@ -305,14 +348,10 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
             ) : (
               <GroupUpdateModal fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} fetcheMessages={fetcheMessages}/>
             )
-          } */}
+            } */}
           </div>
 
-          <div
-            className="chatboxChat"
-            // backgroundImage:"url('https://w0.peakpx.com/wallpaper/818/148/HD-wallpaper-whatsapp-background-cool-dark-green-new-theme-whatsapp.jpg')"
-            // }}
-          >
+          <div className="chatboxChat">
             {
               <>
                 <div className="messages">
@@ -330,11 +369,16 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                     <ScrollableMessages messages={messages} />
                   )}
                 </div>
-                <FormControl
+                
+              </>
+            }
+          </div>
+          <div className="chatboxFooter">
+          <FormControl
                   //  onKeyDown={sendMessage}
                   isRequired
                   mt={3}
-                >
+                  >
                   {isTyping ? (
                     <div>
                       {/* <Lottie options={defaultOptions} width={50} height={50} style={{marginBottom: 15,marginLeft: 0}}/> */}
@@ -423,8 +467,6 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                     </div>
                   )}
                 </FormControl>
-              </>
-            }
           </div>
         </>
       ) : (
