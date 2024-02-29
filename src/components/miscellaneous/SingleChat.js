@@ -20,8 +20,8 @@ import Picker from "@emoji-mart/react";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-import message1 from "../../assets/audio/message1.mp3";
-import useSound from "use-sound";
+// import message1 from "../../assets/audio/message1.mp3";
+// import useSound from "use-sound";
 // import AttachFileIcon from '@mui/icons-material/AttachFile';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
@@ -31,14 +31,7 @@ const ENDPOINT = "ws://localhost:9000";
 var socket, selectedChatCompare;
 
 export default function SingleChat({ fetchAgain, setFetchAgain }) {
-  const {
-    selectedChat,
-    setSelectedChat,
-    notifications,
-    setNotifications,
-    isRefresh,
-    setIsRefresh,
-  } = ChatState();
+  const {selectedChat,setSelectedChat,notifications,setNotifications,isRefresh,setIsRefresh} = ChatState();
   const [messages, setMessages] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -49,21 +42,10 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   const [isEmoji, setIsEmoji] = useState(false);
   const [chatReload, setChatReload] = useState(false);
   const user = jwtDecode(localStorage.getItem("auth-token")).id
-  // console.log(user.toString());
-
   // const [play] = useSound(message1);
 
   // var pp=navigator.onLine;
   // console.log(pp);
-
-  // const defaultOptions={
-  //   loop:true,
-  //   autoplay:true,
-  //   animationData:typings,
-  //   rendererSettings:{
-  //     preserveAspectRatio:"xMidYMid slice"
-  //   }
-  // }
 
   const handleMessageSend = (messageId) => {
     socket.emit("messageSend", messageId);
@@ -119,7 +101,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
           // setIsRefresh(!isRefresh)
           if (data.length !== 0) {
             console.log(data);
-            socket?.current?.emit('readMessage', data[data.length - 1]);
+            socket.emit('readMessage', data[data.length - 1]);
           }
         })
 
@@ -164,7 +146,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   const handleOnlineStatus = (chat) => {
     if (!chat) return;
     const chatMembers = chat?.users.find(
-      (user) => user._id !== jwtDecode(localStorage.getItem("auth-token")).id
+      (userr) => userr._id !== user
     );
     const online = onlineUsers.find((user) => user.userId === chatMembers._id);
     return online ? true : false;
@@ -172,8 +154,9 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
 
   useEffect(() => {
     socket = io(ENDPOINT);
-    socket.emit("setup", jwtDecode(localStorage.getItem("auth-token")));
-    socket.on("get-users", (users) => {
+    socket.emit("setup", user);
+    socket.emit("newUser",user);
+    socket.on("getUsers", (users) => {
       setOnlineUsers(users);
     });
     socket.on("connected", () => setSocketConnection(true));
@@ -186,7 +169,11 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
     selectedChatCompare = selectedChat;
     handleOnlineStatus();
   }, [selectedChat,chatReload]);
-  console.log(chatReload);
+
+  // useEffect(() => {
+  //   getMessages();
+  //   console.log("chatReload", chatReload);
+  // }, []);
 
   useEffect(() => {
     socket.on("message received", (newMessage) => {
@@ -256,12 +243,15 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   };
 
   useEffect(() => {
-    socket.current?.on('readMessageSender', (data) => {
-      console.log('read msg');
+    socket.on('readMessageSender', (data) => {
+      console.log('read msg😎😉', data);
+      // setDatas(data);
       // setReadBy(data.readBy);
-      if (data?.chat._id !== undefined) {
-        if (selectedChat._id !== '' && selectedChat._id === data?.chat._id) {
+      if (data?.chat?._id !== undefined) {
+        if (selectedChat?._id !== '' && selectedChat?._id === data.chat?._id) {
+          console.log('read msg666😎😉');
           setChatReload(!chatReload);
+          setIsRefresh(!isRefresh);
         }
       }
     });
@@ -379,16 +369,6 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                   isRequired
                   mt={3}
                   >
-                  {isTyping ? (
-                    <div>
-                      {/* <Lottie options={defaultOptions} width={50} height={50} style={{marginBottom: 15,marginLeft: 0}}/> */}
-                      <p style={{ color: "gray", fontSize: 12, marginLeft: 0 }}>
-                        Typing...
-                      </p>
-                    </div>
-                  ) : (
-                    <></>
-                  )}
                   <TextField
                     fullWidth
                     id="outlined-basic"

@@ -68,7 +68,7 @@ const StyledBadge1 = styled(Badge)(({ theme }) => ({
   },
 }));
 
-export default function ChatUserItem({ name, image, onClick,chat}) {
+export default function ChatUserItem({type=false, name, image, onClick,chat}) {
   const userId = localStorage.getItem("auth-token");
   const uId = jwtDecode(userId)?.id;
   const {notifications,setNotifications}=ChatState()
@@ -84,7 +84,7 @@ export default function ChatUserItem({ name, image, onClick,chat}) {
   
   // console.log(single);
   return (
-    <div className="chat-user-item" style={{height:"7vh"}}>
+    <div className="chat-user-item" style={{height:`${type ? "5vh" : "7vh"}`}}>
     <Box onClick={onClick} style={{ cursor: "pointer" }} className="chat-user-item">
       <div style={{ display: "flex", flexDirection: "row" }}>
       {/* <StyledBadge
@@ -99,7 +99,8 @@ export default function ChatUserItem({ name, image, onClick,chat}) {
           <span style={{fontSize: "1.2rem",fontWeight: "bold",color: "white",overflow: "hidden",textOverflow: "ellipsis"}}>
             {name}
           </span>
-          <div style={{display: "flex",flexDirection: "row"}}>
+
+          {!type && <div style={{display: "flex",flexDirection: "row"}}>
             {
               chat?.latestMessage?.sender._id === uId &&(
                 <>
@@ -117,24 +118,24 @@ export default function ChatUserItem({ name, image, onClick,chat}) {
                 </>
               )
             }
-          {
-            chat?.isGroupChat &&(
-              <span style={{ fontSize: "0.8rem", color: "#aebac1",marginRight:"1rem" }}>
-                {
-                  chat?.latestMessage?.sender._id === uId ? "You: " : chat?.latestMessage?.sender?.name + ": "
-                }
-              </span>
-            )
-            }
-          <span style={{ fontSize: "0.8rem", color: "#aebac1" }}>
             {
-              chat?.latestMessage?.content
+              chat?.isGroupChat &&(
+                <span style={{ fontSize: "0.8rem", color: "#aebac1",marginRight:"1rem" }}>
+                  {
+                    chat?.latestMessage?.sender._id === uId ? "You: " : chat?.latestMessage?.sender?.name + ": "
+                  }
+                </span>
+              )
             }
-          </span>
-          {/* <span style={{ fontSize: "0.8rem", color: "#00a884" }}>
-            typing . . .
-          </span> */}
-          </div>
+            <span style={{ fontSize: "0.8rem", color: "#aebac1" }}>
+              {
+                chat?.latestMessage?.content
+              }
+            </span>
+            {/* <span style={{ fontSize: "0.8rem", color: "#00a884" }}>
+              typing . . .
+            </span> */}
+          </div>}
         </div>
         <div style={{display: "flex",flexDirection: "column",marginLeft: "auto",marginRight: "1rem",alignItems: "center",justifyContent: "center"}}>
           <span style={{ fontSize: "0.8rem", color: `${chat?.unReadMsgCount>0 ? "#00a884" : "#aebac1"}`

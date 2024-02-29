@@ -83,6 +83,12 @@ justify-content: flex-end;
 margin-top: 5px;
 }
 
+.time-stamp small{
+  color: rgb(223 205 205);
+  font-size: .6875rem;
+  margin-left: 5px;
+}
+
 .chat-user-item:hover{
   background-color: #131f25 !important;
   transition: all;
@@ -172,4 +178,29 @@ margin-top: 5px;
   align-items: center;
   color: white;
 }
+/* .chatboxFooter{
+  width: 100%;
+  background-color: #198d61;
+  height: 76px;
+  max-height: 150px;
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+} */
+
+#scrollBB{
+  background-color: #202c33;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-top: 10px;
+  margin-left: auto;
+  position: fixed;
+  bottom: 100px;
+  right: 30px;
+  z-index: 2;
+}
+
 
