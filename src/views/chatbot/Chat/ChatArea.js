@@ -11,7 +11,7 @@ export default function ChatArea() {
   return (
     <div className="content">
       {/* <DemoNavbar /> */}
-      <Row className={!isDarkMode ? "light-chat" : "chat"}>
+      <Row className="chat">
         {user && (
           <MyChats fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
         )}

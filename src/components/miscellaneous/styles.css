@@ -39,6 +39,13 @@
   border-radius: 0;
 }
 
+/* @media screen and (min-width: 769px){
+  #mychat {
+    max-width: 500px;
+    min-width: 300px;
+  }
+} */
+
 #chatbox{
   background-color: #dee0df;
   height: 100%;
@@ -201,6 +208,25 @@ margin-top: 5px;
   bottom: 100px;
   right: 30px;
   z-index: 2;
+}
+
+.cornerRigth{
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  right: 13px;
+  top: 0;
+  clip-path: polygon(0 0, 0 100%, 100% 0);
+  background-color: #005545;
+}
+.cornerLeft{
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  left: 0;
+  top: 0;
+  clip-path: polygon(100% 0, 0 0, 100% 100%);
+  background-color: rgb(38 48 53);
 }
 
 

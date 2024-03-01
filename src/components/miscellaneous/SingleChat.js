@@ -133,6 +133,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
       setLatestMessage("");
       if (res.ok) {
         setIsRefresh(!isRefresh);
+        setIsEmoji(false);
         handleMessageSend(res?.data?.data?._id);
         setMessages([...messages, res?.data?.data]);
         socket.emit("new message", res?.data?.data);
@@ -437,7 +438,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                   />
                   {isEmoji && (
                     <div
-                      style={{ position: "absolute", bottom: 300, right: 16 }}
+                      style={{ position: "absolute", bottom: 108, right: 16 }}
                     >
                       <Picker
                         data={data}

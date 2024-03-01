@@ -30,7 +30,7 @@
     "moment": "^2.29.4",
     "perfect-scrollbar": "1.5.5",
     "primeicons": "^6.0.1",
-    "primereact": "^9.5.0",
+    "primereact": "^9.6.4",
     "react": ">=16.8.0",
     "react-chartjs-2": "3.0.3",
     "react-confetti": "^6.1.0",

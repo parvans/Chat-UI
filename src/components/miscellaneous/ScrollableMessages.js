@@ -81,21 +81,26 @@ export default function ScrollableMessages({ messages }) {
             </div>
             <div className="messages">
               {group.messages && group.messages.map((message, index) => (
-                  <div style={{ display: "flex" }} key={message._id}>
-                    {(isSameSender(group.messages, message, index, uId) ||isLastMessage(group.messages, index, uId)) && (message.chat.isGroupChat && 
-                      <Tooltip title={message.sender.name} arrow placement="top-start">
-                        <Avatar src={message.sender?.image} sx={{ width: 40, height: 40 ,marginBottom:"10px",marginRight:"10px"}}/>
-                      </Tooltip>
-                    )}
+                <div style={{ 
+                  display: "flex",
+                  position: "relative",
+                  marginTop: isSameUser(group.messages,message,index,uId) ? 10 : 15,
 
-                    <div 
-                      className={message.sender._id === uId ? "userMessage" : "recieverMessage"}
-                      style={{
-                        marginLeft: isSameSenderMargin(group.messages,message,index,uId),
-                        marginTop: isSameUser(group.messages,message,index,uId) ? 10 : 15,
-                        position:"relative",                     
-                      }}
-                      >
+                   }} key={message._id}>
+                  {(isSameSender(group.messages, message, index, uId) ||isLastMessage(group.messages, index, uId)) && (message.chat.isGroupChat && 
+                    <Tooltip title={message.sender.name} arrow placement="top-start">
+                      <Avatar src={message.sender?.image} sx={{ width: 40, height: 40 ,marginBottom:"10px",marginRight:"10px"}}/>
+                    </Tooltip>
+                  )}
+
+
+                  <div className={message.sender._id === uId ? "userMessage" : "recieverMessage"}
+                    style={{
+                      marginLeft: isSameSenderMargin(group.messages,message,index,uId),
+                      position:"relative",                     
+                    }}>
+                    <div className="messageContent">
+
                       {/* This is for croping the large text messages */}
                       <ReadMore item={message} user={uId}>
                         {message.content}
@@ -122,17 +127,15 @@ export default function ScrollableMessages({ messages }) {
                             {/* For message seen  */}
                             { message.status==="seen" && <DoneAllIcon style={{fontSize: "15px", color: "rgb(0 230 255)", marginLeft: "5px"}}/> }
                           </>
-
-                          
                         }
 
-              
                       </div>
-                      
                     </div>
                   </div>
-                  
-                ))}
+
+                  <div className={message.sender._id === uId ?"cornerRigth":"cornerLeft"}></div>
+                </div>
+              ))}
             </div>
           </div>
         ))}

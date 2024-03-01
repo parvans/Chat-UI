@@ -191,7 +191,6 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
           !profileMode ? (
             <>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                {/* <Tooltip title="Profile"> */}
                 <Avatar
                   src={userDetails?.image}
                   sx={{
@@ -202,9 +201,7 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
                   }}
                   onClick={() => setProfileMode(!profileMode)}
                 />
-                {/* </Tooltip> */}
 
-                {/* <Tooltip title="Account settings"> */}
                   <IconButton
                     onClick={handleClick}
                     size="small"
@@ -215,7 +212,6 @@ export default function MyChats({ fetchAgain, setFetchAgain }) {
                   >
                     <MoreVertIcon style={{ color: "#aebac1" }} />
                   </IconButton>
-                {/* </Tooltip> */}
               </div>
               
               <Menu 
