@@ -5,36 +5,35 @@ import { isSameSenderMargin } from "config/ChatLogic";
 import { isSameUser } from "config/ChatLogic";
 import { isSameSender } from "config/ChatLogic";
 import jwtDecode from "jwt-decode";
-import React, { useState,useEffect } from "react";
+import React, { useState } from "react";
 import ScrollableFeed from "react-scrollable-feed";
 import moment from "moment";
 import DoneIcon from '@mui/icons-material/Done';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import { Spinner } from "reactstrap";
+// import { Spinner } from "reactstrap";
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Button, IconButton } from '@mui/material';
+// import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { IconButton } from '@mui/material';
 import { useRef } from 'react';
-import { position } from '@chakra-ui/react';
+// import { position } from '@chakra-ui/react';
 import ReadMore from './ReadMore';
 import "./styles.css";
 
 export default function ScrollableMessages({ messages }) {
 
   const uId = jwtDecode(localStorage.getItem("auth-token"))?.id;
-  const [readMore,setReadMore]=useState(false);
-  const [isHovering, setIsHovering] = useState(-1);
+  // const [isHovering, setIsHovering] = useState(-1);
   const [scrollUp, setScrollUp] = useState(false);
   const EndMessage = useRef(null);
 
-  const handleMouseOver = (i) => {
-    setIsHovering(i);
-  };
+  // const handleMouseOver = (i) => {
+  //   setIsHovering(i);
+  // };
 
-  const handleMouseOut = () => {
-    setIsHovering(-1);
-  };
+  // const handleMouseOut = () => {
+  //   setIsHovering(-1);
+  // };
 
   const groupedDays = messages.reduce((groups, message) => {
     const isSameorAfter = moment(message.createdAt).calendar({
@@ -99,7 +98,7 @@ export default function ScrollableMessages({ messages }) {
                       marginLeft: isSameSenderMargin(group.messages,message,index,uId),
                       position:"relative",                     
                     }}>
-                    <div className="messageContent">
+                    <div className="messageContent" style={{wordBreak: "break-word"}}>
 
                       {/* This is for croping the large text messages */}
                       <ReadMore item={message} user={uId}>

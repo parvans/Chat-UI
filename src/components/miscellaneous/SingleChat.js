@@ -1,4 +1,4 @@
-import { FormControl, Text } from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
 import { ChatState } from "context/ChatProvider";
 import React, { useEffect, useState } from "react";
 import { Badge } from "reactstrap";
@@ -24,7 +24,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 // import useSound from "use-sound";
 // import AttachFileIcon from '@mui/icons-material/AttachFile';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-
+import VideocamIcon from '@mui/icons-material/Videocam';
+import CallIcon from '@mui/icons-material/Call';
 //==================================================================>>
 
 const ENDPOINT = "ws://localhost:9000";
@@ -46,6 +47,13 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
 
   // var pp=navigator.onLine;
   // console.log(pp);
+
+  const mediaSet = ()=>{
+    let stream = navigator.mediaDevices.getUserMedia({video:true,audio:true})
+    .then((stream)=>{
+      console.log(stream);
+    })
+  }
 
   const handleMessageSend = (messageId) => {
     socket.emit("messageSend", messageId);
@@ -73,13 +81,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
         setMessages(res?.data?.data);
         // Read Message
         let chat = res.data.data.map((item,index)=>({...item,index:index}))
-        let avoidSender = chat.filter((item)=>item.sender._id!==user&& !item.readBy.some((i)=>i.user==user));
-        // const readRes = await readMessage({
-        //   chatId:avoidSender.chat._id,
-        //   messgId:avoidSender._id
-        // })
-        // console.log(avoidSender);
-
+        let avoidSender = chat.filter((item)=>item.sender._id!==user&& !item.readBy.some((i)=>i.user===user));
         let promise = avoidSender.map(async(item)=>{
           return new Promise(async(resolve,reject)=>{
             try {
@@ -97,8 +99,6 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
           })
         })
         Promise.all(promise).then((data)=>{
-          // console.log(data);
-          // setIsRefresh(!isRefresh)
           if (data.length !== 0) {
             console.log(data);
             socket.emit('readMessage', data[data.length - 1]);
@@ -122,9 +122,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   };
 
   const sendMessage = async () => {
-    // if(event.key === "Enter" && latestMessage){
     socket.emit("stop typing", selectedChat?._id);
-
     try {
       const res = await sendUserMessage({
         chatId: selectedChat?._id,
@@ -169,12 +167,17 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
     getMessages();
     selectedChatCompare = selectedChat;
     handleOnlineStatus();
-  }, [selectedChat,chatReload]);
+  }, [selectedChat]);
+
+  useEffect(() => {
+    getMessages();
+  }, [chatReload]);
+  console.log("chatReload", chatReload);
 
   // useEffect(() => {
   //   getMessages();
   //   console.log("chatReload", chatReload);
-  // }, []);
+  // }, [])
 
   useEffect(() => {
     socket.on("message received", (newMessage) => {
@@ -248,8 +251,10 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
       console.log('read msg😎😉', data);
       // setDatas(data);
       // setReadBy(data.readBy);
+      console.log(data);
       if (data?.chat?._id !== undefined) {
-        if (selectedChat?._id !== '' && selectedChat?._id === data.chat?._id) {
+        console.log(data);
+        if (selectedChatCompare?._id !== '' && selectedChatCompare?._id === data.chat?._id) {
           console.log('read msg666😎😉');
           setChatReload(!chatReload);
           setIsRefresh(!isRefresh);
@@ -257,7 +262,6 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
       }
     });
   });
-
   return (
     <div className="rightChatBox">
 
@@ -298,39 +302,53 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
               {selectedChat?.chatName.toUpperCase()}
             </Text>
             )} */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Avatar
-                src={
-                  selectedChat?.isGroupChat
-                    ? selectedChat?.chatImage
-                    : selectedChat?.users[0]._id ===
-                      jwtDecode(localStorage.getItem("auth-token")).id
-                    ? selectedChat?.users[1]?.image
-                    : selectedChat?.users[0]?.image
-                }
-                sx={{ width: 50, height: 50, marginRight: "1rem" }}
-              />
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <Text fontSize={20} mt={30}>
-                  {selectedChat?.isGroupChat
-                    ? selectedChat?.chatName.toUpperCase()
-                    : selectedChat?.users[0]._id ===
-                      jwtDecode(localStorage.getItem("auth-token")).id
-                    ? selectedChat?.users[1]?.name.toUpperCase()
-                    : selectedChat?.users[0]?.name.toUpperCase()}
-                  <p style={{ fontSize: 12, color: "gray" }}>
-                    {!isTyping
-                      ? handleOnlineStatus(selectedChat) && "Online"
-                      : "typing..."}
-                  </p>
-                </Text>
+            <div className="details">
+
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <Avatar src={
+                    selectedChat?.isGroupChat
+                      ? selectedChat?.chatImage
+                      : selectedChat?.users[0]._id ===
+                        jwtDecode(localStorage.getItem("auth-token")).id
+                      ? selectedChat?.users[1]?.image
+                      : selectedChat?.users[0]?.image
+                  } sx={{ width: 50, height: 50, marginRight: "1rem" }}
+                />
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <Text fontSize={20} mt={30}>
+                    {selectedChat?.isGroupChat
+                      ? selectedChat?.chatName.toUpperCase()
+                      : selectedChat?.users[0]._id ===
+                        jwtDecode(localStorage.getItem("auth-token")).id
+                      ? selectedChat?.users[1]?.name.toUpperCase()
+                      : selectedChat?.users[0]?.name.toUpperCase()}
+                    <p style={{ fontSize: 12, color: "gray" }}>
+                      {!isTyping
+                        ? handleOnlineStatus(selectedChat) && "Online"
+                        : "typing..."}
+                    </p>
+                  </Text>
+                </div>
               </div>
+                <div className="media-items">
+                  <IconButton
+                    onClick={() => {
+                      mediaSet();
+                      console.log("Video Call");
+                    }}
+                  >
+                  <VideocamIcon style={{ color: "#aebac1" }} />
+                  </IconButton>
+                  <IconButton onClick={() => sendMessage()}>
+                    <CallIcon style={{ color: "#aebac1" }} />
+                  </IconButton>
+                </div>
             </div>
 
             {/* {
@@ -357,19 +375,13 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                       <CircularProgress color="inherit" />
                     </Backdrop>
                   ) : (
+                    <>
                     <ScrollableMessages messages={messages} />
-                  )}
-                </div>
-                
-              </>
-            }
-          </div>
-          <div className="chatboxFooter">
-          <FormControl
-                  //  onKeyDown={sendMessage}
+                    <div className="chatboxFooter">
+          {/* <FormControl
                   isRequired
                   mt={3}
-                  >
+                  > */}
                   <TextField
                     fullWidth
                     id="outlined-basic"
@@ -438,7 +450,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                   />
                   {isEmoji && (
                     <div
-                      style={{ position: "absolute", bottom: 108, right: 16 }}
+                      style={{ position: "absolute", bottom: 108, right: 16,zIndex:2 }}
                     >
                       <Picker
                         data={data}
@@ -447,8 +459,17 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                       />
                     </div>
                   )}
-                </FormControl>
+                {/* </FormControl> */}
           </div>
+                    </>
+                    
+                  )}
+                </div>
+                
+              </>
+            }
+          </div>
+          
         </>
       ) : (
         <div style={{ textAlign: "center", marginTop: "15%" }}>
