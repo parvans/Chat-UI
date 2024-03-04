@@ -1,0 +1,20 @@
+.authContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-height: 100vh !important;
+  background-color: #343a40 !important;
+}
+.iconButton{
+    border: none;
+    background-color: #fff;
+    /* position: relative;
+    height: 1px;
+    right: 34px;
+    top: 19px; */
+}
+.showPassword{
+    display: flex;
+    flex-direction: row;
+    /* width: 104%; */
+}

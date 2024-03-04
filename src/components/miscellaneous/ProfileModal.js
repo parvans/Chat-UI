@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDisclosure } from '@chakra-ui/hooks'
-import { IconButton } from '@chakra-ui/react'
+// import { IconButton } from '@chakra-ui/react'
 import { ViewIcon } from '@chakra-ui/icons'
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 export default function ProfileModal({user,children}) {
@@ -11,8 +11,8 @@ export default function ProfileModal({user,children}) {
         children?(
             <span onClick={onOpen}>{children}</span>
         ):(
-            <Button onClick={onOpen} className="btn-round" color="secondary">
-                <ViewIcon w={17} h={20} />
+            <Button onClick={onOpen} className="btn-icon btn-round" color="dark" outline>
+                <ViewIcon w={17} h={20} mb={1} />
             </Button>
         )}
 

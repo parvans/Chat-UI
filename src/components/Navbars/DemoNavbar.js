@@ -16,7 +16,14 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import { BellIcon } from "@chakra-ui/icons";
+import { Avatar, Menu, MenuButton, MenuGroup, MenuItem, MenuList, useDisclosure } from "@chakra-ui/react";
+import Notify from "components/miscellaneous/Notify";
+import UserListItem from "components/miscellaneous/UserListItem";
+import { ChatState } from "context/ChatProvider";
+import jwtDecode from "jwt-decode";
+import React, { useState } from "react";
+import { Toaster } from "react-hot-toast";
 import { Link, useLocation } from "react-router-dom";
 import {
   Collapse,
@@ -34,28 +41,102 @@ import {
   InputGroupText,
   InputGroupAddon,
   Input,
-  Badge
+  Badge,
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  Spinner
 } from "reactstrap";
 
 import routes from "routes.js";
-
+import { getUsers } from "utilities/apiService";
+import { accessChat } from "utilities/apiService";
+import NotificationBadge from 'react-notification-badge'
+import Effect from 'react-notification-badge'
+import tc from 'thousands-counter'
 function Header(props) {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpens, setIsOpens] = React.useState(false);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
   const [color, setColor] = React.useState("transparent");
   const sidebarToggle = React.useRef();
   const location = useLocation();
 
-  const toggle = () => {
-    if (isOpen) {
+  const [search,setSearch]=useState('')
+  const [searchResult,setSearchResult]=useState([])
+  const [loading,setLoading]=useState(false)
+  const [loadingChat,setLoadingChat]=useState(false)
+
+  const {user,setSelectedChat,chats,setChats,notifications,setNotifications}=ChatState()
+  const {isOpen,onOpen,onClose}=useDisclosure()
+  const [noData,setNoData]=useState(false)
+
+  const [notifOpen,setNotifOpen]=useState(false)
+
+    const handleSearch=async(value)=>{
+    // e.preventDefault()
+    // if(!search){
+    //   toast.error("please enter something to search")
+    // }else{
+      try {
+        setLoading(true)
+      const res=await getUsers(value)
+      if(res?.ok){
+        setSearchResult(res?.data?.data)
+      } 
+      if(res?.data?.data?.length === 0){
+        setNoData(true)
+      }else{
+        setNoData(false)
+      }  
+      setLoading(false)
+      } catch (error) {
+        console.log(error)
+        setLoading(false)
+      }
+    
+    
+  }
+
+  const accessUserChat=async(id)=>{
+    console.log(id);
+    try {
+      setLoadingChat(true)
+      const chatRes=await accessChat(id)
+      console.log(chats);
+      if(chatRes?.ok){
+        if(!chats?.find((item)=>item?._id === chatRes?.data?.data?._id)) setChats([chatRes?.data?.data,...chats])
+        setSelectedChat(chatRes?.data?.data)
+        setLoadingChat(false)
+        onClose()
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  function toggle(){
+    setSearchResult([])
+    setNoData(false)
+    setSearch('')
+    onClose()
+  }
+
+
+  const toggles = () => {
+    if (isOpens) {
       setColor("transparent");
     } else {
       setColor("dark");
     }
-    setIsOpen(!isOpen);
+    setIsOpens(!isOpens);
   };
   const dropdownToggle = (e) => {
     setDropdownOpen(!dropdownOpen);
+  };
+
+  const notifToggle = (e) => {
+    setNotifOpen(!notifOpen);
   };
   const getBrand = () => {
     let brandName = "Not Found";
@@ -73,7 +154,7 @@ function Header(props) {
   };
   // function that adds color dark/transparent to the navbar on resize (this is for the collapse)
   const updateColor = () => {
-    if (window.innerWidth < 993 && isOpen) {
+    if (window.innerWidth <=993 && isOpens) {
       setColor("dark");
     } else {
       setColor("transparent");
@@ -92,7 +173,7 @@ function Header(props) {
   });
   React.useEffect(() => {
     if (
-      window.innerWidth < 993 &&
+      window.innerWidth <= 993 &&
       document.documentElement.className.indexOf("nav-open") !== -1
     ) {
       document.documentElement.classList.toggle("nav-open");
@@ -102,9 +183,37 @@ function Header(props) {
   return (
     // add or remove classes depending if we are on full-screen-maps page or not
     <Navbar
-      color="dark"
+      color="success"
       expand="lg"
       className="navbar-absolute fixed-top">
+
+        <Modal isOpen={isOpen} toggle={onClose} className="modal-dialog-centered" scrollable={true}>
+                
+                <ModalHeader toggle={toggle}>Search User</ModalHeader>
+                <ModalBody>
+                <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
+                            <input type="text" placeholder="search user" onChange={(e)=>handleSearch(e.target.value)} style={{width:"80%",padding:"10px",borderRadius:"10px",borderWidth:"1px",borderColor:"#4ec94e",margin:"10px"}}/>
+                            {/* <Button color="success" onClick={handleSearch}>Search</Button> */}
+                        </div>
+                            
+                        <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
+                            {loading? <Spinner color="success" style={{margin:"10px"}}/>:(
+
+                              searchResult.map((user,index)=>(
+                                  <UserListItem key={index} index={index} users={user} handleFunction={()=>accessUserChat(user?._id)}/>
+                              ))
+                            )}
+                            {
+                              loadingChat && <Spinner color="success" style={{margin:"10px"}}/>
+                            }
+                            {
+                              searchResult?.length === 0 && noData && <h5>No Data Found</h5>
+                            }
+                        </div>
+                </ModalBody>
+
+            </Modal>
+
       <Container fluid >
         <div className="navbar-wrapper" >
           {/* <div className="navbar-toggle">
@@ -120,34 +229,52 @@ function Header(props) {
             </button>
           </div> */}
           <NavbarBrand href="/chatbot/chat">
-            Chatbot <Badge color="success">Beta</Badge>
+            Chatbot <Badge color="dark">Beta</Badge>
+            
             </NavbarBrand>
+            
         </div>
-        <NavbarToggler onClick={toggle}>
+        <NavbarToggler onClick={toggles}>
+              {
+                notifications?.length > 0 && <Badge color="danger" pill style={{ position: "absolute", top: "2px", right: "7px" }} >
+                      {notifications?.length}
+                    </Badge>
+              }
           <span className="navbar-toggler-bar navbar-kebab" />
           <span className="navbar-toggler-bar navbar-kebab" />
           <span className="navbar-toggler-bar navbar-kebab" />
+          
         </NavbarToggler>
-        <Collapse isOpen={isOpen} navbar className="justify-content-end">
-          {/* <form>
-            <InputGroup className="no-border">
-              <Input type="text" placeholder="Search..."  />
-              <InputGroupAddon addonType="append">
-                <InputGroupText>
-                  <i className="nc-icon nc-zoom-split" />
-                </InputGroupText>
-              </InputGroupAddon>
-            </InputGroup>
-          </form> */}
+        
+        <Collapse isOpen={isOpens} navbar className="justify-content-end">
+
+        <Button className="btn-icon btn-round" color="dark" outline onClick={onOpen}>
+        <i className="nc-icon nc-zoom-split"></i>
+        </Button>
+      
+        <Menu>
+          <MenuButton p={1} bg={"#74cf89"} border={"none"}>
+            <NotificationBadge
+            count={notifications?.length}
+            effect={Effect.SCALE}
+            />
+            <BellIcon  w={25} h={50} />
+          </MenuButton >
+          <MenuList pl={2} pr={2} pt={2} pb={2} border={"none"} bg={"#fff"} borderRadius={"10px"}  width={"300px"}>
+            <div style={{display:"flex",flexDirection:"column",margin:"10px",marginTop:"10px"}}>
+              {notifications?.length === 0 && <h5>No Notifications</h5>}
+
+              {
+                notifications?.map((notification)=>(<Notify notification={notification} key={notification?._id}/>))
+              }
+            </div>
+          </MenuList>
+
+        </Menu>
+
           <Nav navbar>
-            {/* <NavItem>
-              <Link to="#pablo" className="nav-link btn-magnify">
-                <i className="nc-icon nc-layout-11" />
-                <p>
-                  <span className="d-lg-none d-md-block">Stats</span>
-                </p>
-              </Link>
-            </NavItem> */}
+           
+
             <Dropdown
               nav
               isOpen={dropdownOpen}
@@ -160,7 +287,7 @@ function Header(props) {
                 </p>
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem className="mt-2" tag="a" onClick={handleProfile}>
+                <DropdownItem className="mt-2" tag="a" onClick={handleProfile} disabled>
                   <i className="nc-icon nc-single-02" style={{ fontSize: "1.1rem" }} /> Profile
                   </DropdownItem>
                 <DropdownItem tag="a" onClick={handleLogout}>
@@ -188,6 +315,10 @@ function Header(props) {
           </Nav>
         </Collapse>
       </Container>
+      <Toaster
+                position='top-center'
+                reverseOrder={false}
+            />
     </Navbar>
   );
 }

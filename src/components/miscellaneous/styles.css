@@ -1,0 +1,246 @@
+.messages {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  overflow: hidden;
+  height: calc(100% - 0px);
+}
+.scroll-vard {
+  scrollbar-width: auto;
+  scrollbar-color: #636363;
+}
+.scroll-vard::-webkit-scrollbar {
+  width: 1px;
+}
+.scroll-vard::-webkit-scrollbar-thumb {
+  background-color: #636363;
+  border-radius: 8px;
+}
+
+
+#light-mychat{
+  background-color: #efefef;
+  height: 100%;
+  display: flex;
+}
+
+#header{
+  background-color: #202c33;
+}
+
+#light-header{
+  background-color: #e0dfdf;
+}
+
+#mychat{
+  background-color: #111b21;
+  height: 100%;
+  display: flex;
+  border-radius: 0;
+}
+
+/* @media screen and (min-width: 769px){
+  #mychat {
+    max-width: 500px;
+    min-width: 300px;
+  }
+} */
+
+#chatbox{
+  background-color: #dee0df;
+  height: 100%;
+  display: flex;
+
+}
+
+.date{
+text-align: center;
+margin-top: 10px;
+margin-bottom: 10px;
+color: #adadad;
+font-weight: bold;
+font-size: 15px;
+}
+.date-span{
+  background-color:#454242 ;
+  padding:5px 10px;
+  border-radius: 10px;
+}
+
+.user-avatar{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  background-size: cover;
+  background-position: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-top: 10px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+
+.time-stamp{
+display: flex;
+align-items: center;
+justify-content: flex-end;
+margin-top: 5px;
+}
+
+.time-stamp small{
+  color: rgb(223 205 205);
+  font-size: .6875rem;
+  margin-left: 5px;
+}
+
+.chat-user-item:hover{
+  background-color: #131f25 !important;
+  transition: all;
+  transition-duration: 0.5s;
+
+}
+.scroll-vard{
+  padding-left: 0;
+  padding-right: 0;
+}
+.chatboxChat{
+  /* style={{
+    display:"flex",flexDirection:"column",justifyContent:"flex-end",
+    width:"100%",height:"87vh",overflow:"hidden",
+    padding:10,borderRadius:10, */
+    display: flex;
+    flex-direction: column;
+    /* justify-content: flex-end; */
+    width: 100%;
+    height: 97vh;
+    overflow: auto;
+}
+
+#userIc{
+  position: absolute;
+  top: -5px;
+  right: -7px;
+  color: rgb(0, 85, 69);
+}
+#recieverIc{
+  position: absolute;
+  top: -5px;
+  left: -7px;
+  color: rgb(38 48 53);
+}
+
+.userMessage{
+  background-color: rgb(0 85 69);
+  border-radius: 10px 0px 10px 10px;
+  margin-right:20px;
+  font-size:15px;
+  max-width: 75%;
+  padding: 5px 10px;
+  color: white;
+}
+.recieverMessage{
+  background-color: rgb(38 48 53);
+  border-radius:0px 10px 10px 10px;
+  margin-right:0px;
+  font-size:15px;
+  max-width: 75%;
+  padding: 5px 10px;
+  color:white;
+}
+
+.read-or-hide {
+  color: rgb(44, 186, 231);
+  cursor: pointer;
+}
+
+.paraDiv{
+  position: relative; 
+}
+
+.readmorePara{
+  margin: 0;
+  line-height: 18px;
+}
+.readmoreParabold{
+  margin: 0;
+  font-weight: bold;
+}
+
+/* main style */
+
+.rightChatBox{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+}
+.chatboxHeader{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  height: 60px;
+  color: white;
+}
+
+.details{
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 60px;
+  justify-content: space-between;
+}
+/* .chatboxFooter{
+  width: 100%;
+  background-color: #198d61;
+  height: 76px;
+  max-height: 150px;
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+} */
+
+#scrollBB{
+  background-color: #202c33;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-top: 10px;
+  margin-left: auto;
+  position: fixed;
+  bottom: 100px;
+  right: 30px;
+  z-index: 2;
+}
+
+.cornerRigth{
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  right: 13px;
+  top: 0;
+  clip-path: polygon(0 0, 0 100%, 100% 0);
+  background-color: #005545;
+}
+.cornerLeft{
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  left: 0;
+  top: 0;
+  clip-path: polygon(100% 0, 0 0, 100% 100%);
+  background-color: rgb(38 48 53);
+}
+a{
+  color: rgb(44, 186, 231);
+}
+
+

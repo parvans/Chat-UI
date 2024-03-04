@@ -1,4 +1,4 @@
-import {Menu,MenuButton } from '@chakra-ui/react'
+import {Menu,MenuButton, MenuList } from '@chakra-ui/react'
 import {useDisclosure } from '@chakra-ui/hooks'
 import { BellIcon } from '@chakra-ui/icons'
 import React, { useState } from 'react'
@@ -16,19 +16,19 @@ export default function SideDrawer() {
   const [loading,setLoading]=useState(false)
   const [loadingChat,setLoadingChat]=useState(false)
 
-  const {user,setSelectedChat,chats,setChats}=ChatState()
+  const {user,setSelectedChat,chats,setChats,notifications,setNotifications}=ChatState()
   const {isOpen,onOpen,onClose}=useDisclosure()
   const [noData,setNoData]=useState(false)
 
   const [userChat,setUserChat]=useState(false)
-  const handleSearch=async(e)=>{
-    e.preventDefault()
-    if(!search){
-      toast.error("please enter something to search")
-    }else{
+  const handleSearch=async(value)=>{
+    // e.preventDefault()
+    // if(!search){
+    //   toast.error("please enter something to search")
+    // }else{
       try {
         setLoading(true)
-      const res=await getUsers(search)
+      const res=await getUsers(value)
       if(res?.ok){
         setSearchResult(res?.data?.data)
       } 
@@ -42,7 +42,7 @@ export default function SideDrawer() {
         console.log(error)
         setLoading(false)
       }
-    }
+    
     
   }
 
@@ -73,19 +73,33 @@ export default function SideDrawer() {
   return (
     <>
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",backgroundColor:"#4ec94e",width:"100%",padding:"5px 10px 5px 10px",borderWidth:"5px",borderRadius:"10px",borderColor:"#fff",borderStyle:"solid"}}>
-      <Button onClick={onOpen}>
+      <Button className="btn-icon btn-round" color="dark" outline 
+       onClick={onOpen}>
         <i className="nc-icon nc-zoom-split"></i>{' '}
         {/* <span>Search User</span> */}
         </Button>
-        <h5 style={{margin:"0px", color:"#fff"}}>Chat App</h5>
+        <h5 style={{margin:"0px", color:"#fff"}}>Chatbot</h5>
     <div>
-      <Menu>
+      {/* <Menu>
         <MenuButton p={1} bg={"#4ec94e"} border={"none"}>
           <BellIcon  w={25} h={50} />
         </MenuButton >
+        <MenuList bg={"#4ec94e"} border={"none"} color={"#fff"}>
+             {
+              !notifications?.length && "No Notifications"
+             }
+             {
+              !notifications?.length && "No Notifications"
+             }
+             {
+              !notifications?.length && "No Notifications"
+             }
+             {
+              !notifications?.length && "No Notifications"
+             }
+        </MenuList>
 
-        </Menu>
-        <ProfileModal/>
+        </Menu> */}
     </div>
     </div>
     <Modal isOpen={isOpen} toggle={onClose} className="modal-dialog-centered" scrollable={true}>
@@ -93,8 +107,8 @@ export default function SideDrawer() {
                 <ModalHeader toggle={toggle}>Search User</ModalHeader>
                 <ModalBody>
                 <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
-                            <input type="text" placeholder="search user" value={search} onChange={(e)=>setSearch(e.target.value)} style={{width:"80%",padding:"10px",borderRadius:"10px",borderWidth:"1px",borderColor:"#4ec94e",margin:"10px"}}/>
-                            <Button color="success" onClick={handleSearch}>Search</Button>
+                            <input type="text" placeholder="search user" onChange={(e)=>handleSearch(e.target.value)} style={{width:"80%",padding:"10px",borderRadius:"10px",borderWidth:"1px",borderColor:"#4ec94e",margin:"10px"}}/>
+                            {/* <Button color="success" onClick={handleSearch}>Search</Button> */}
                         </div>
                             
                         <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
@@ -106,6 +120,9 @@ export default function SideDrawer() {
                             )}
                             {
                               loadingChat && <Spinner color="success" style={{margin:"10px"}}/>
+                            }
+                            {
+                              searchResult?.length === 0 && noData && <h5>No Data Found</h5>
                             }
                         </div>
                 </ModalBody>

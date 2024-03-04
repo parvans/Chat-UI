@@ -1,9 +1,9 @@
-import { ChatState } from "context/ChatProvider";
+// import { ChatState } from "context/ChatProvider";
 import React from "react";
-import { Button } from "reactstrap";
+// import { Button } from "reactstrap";
 
 export default function UserListItem({index,users,handleFunction}) {
-  const {user}=ChatState()
+  // const {user}=ChatState()
   return (
     <div  onClick={handleFunction} key={index} style={{display: "flex",cursor:"pointer",flexDirection: "row",width: "100%",alignItems: "center",justifyContent: "space-between",backgroundColor: "rgb(187 187 187)",padding: "10px",borderRadius: "10px",borderWidth: "1px",borderColor: "#4ec94e",margin: "10px"}}>
       <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
